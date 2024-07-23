@@ -35,7 +35,10 @@ class DistrictPage extends StatelessWidget {
                   ),
                   const Expanded(
                     flex: 9,
-                    child: DropdownMenuExample(),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: DropdownMenuExample(),
+                    )
                   ),
                 ],
               ),

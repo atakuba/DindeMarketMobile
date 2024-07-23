@@ -1,4 +1,5 @@
 import 'package:dinde_market/district_page.dart';
+import 'package:dinde_market/error_page/error_page.dart';
 import 'package:dinde_market/loading_page.dart';
 import 'package:flutter/material.dart';
 
@@ -117,9 +118,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   // wireframe for each widget.
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    const Expanded(
-                      child: Text('You have pushed the button this many times:',)
-                      
+                    Expanded(
+                      child: TextButton(onPressed: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ErrorPage()));}, child: const Text("data"))
                     ),
                     Center(
                       child: Container(
