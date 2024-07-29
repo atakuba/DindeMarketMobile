@@ -10,11 +10,11 @@ class ErrorPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-           const Expanded(
+          Expanded(
             flex: 392,
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: Image(image: AssetImage('assets/error_pic.png'), width: 300,),
+              child: Image(image: const AssetImage('assets/error_pic.png'), width: Utilities.setWidgetWidthByPercentage(context, 73.6),),
             ),
           ),
           const Expanded(
@@ -27,7 +27,7 @@ class ErrorPage extends StatelessWidget {
           Expanded(
             flex: 50,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: Utilities.screenWidthByPercentage(context, 9.9)),
+              padding: EdgeInsets.symmetric(horizontal: Utilities.setWidgetWidthByPercentage(context, 9.9)),
               child: const Align(
                 alignment: Alignment.bottomCenter,
                 child: Text("Пожалуйста проверьте ваше интернет соединение, затем обновите страницу", textAlign: TextAlign.center,),
@@ -37,7 +37,7 @@ class ErrorPage extends StatelessWidget {
           Expanded(
             flex: 67,
             child: SizedBox(
-              width: Utilities.setWidgetWidthByPercentage(context, 93.5),
+              width: Utilities.setWidgetWidthByPercentage(context, 63.5),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
