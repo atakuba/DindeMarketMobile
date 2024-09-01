@@ -1,4 +1,5 @@
 import 'package:dinde_market/models/mock_data/mock_data.dart';
+import 'package:dinde_market/pages/navigation_page/home_page/product_list_page.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/serach_bar.dart';
 import 'package:flutter/material.dart';
@@ -67,22 +68,22 @@ class SubCategoryPage extends StatelessWidget {
                           color: Color.fromRGBO(230, 234, 251, 1),
                         ),
                         itemBuilder: (context, index) {
-                          final allSubCategories =
+                          final subCategory =
                               MySubCategories.subCategoryList[index];
-                          if (categoryID == allSubCategories.category.id) {
+                          if (categoryID == subCategory.category.id) {
                             return InkWell(
                               child: Container(
                                 alignment: Alignment.centerLeft,
-                                height: Utilities.setWidgetHeightByPercentage(
-                                    context, 5.5),
+                                height: Utilities.setWidgetHeightByPercentage(context, 5.5),
                                 child: Text(
-                                  allSubCategories.name,
+                                  // to-do check if this is a defect
+                                  subCategory.name,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 15),
                                 ),
                               ),
-                              onTap: () {},
+                              onTap: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage(subCategoryID: subCategory.id, subCategoryName: subCategory.name)));},
                             );
                           } else {
                             return const SizedBox.shrink();

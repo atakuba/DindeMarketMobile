@@ -37,7 +37,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Separate method to build the HomePage content
   Widget _buildHomePageContent(BuildContext context) {
     return Column(
       children: [

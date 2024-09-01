@@ -1,37 +1,33 @@
-import 'package:dinde_market/pages/navigation_page/home_page.dart';
+import 'package:dinde_market/pages/navigation_page/cart_page/cart_page.dart';
+import 'package:dinde_market/pages/navigation_page/favorite_page/favorite_page.dart';
+import 'package:dinde_market/pages/navigation_page/home_page/home_page.dart';
+import 'package:dinde_market/provider/buttom_nav_bar_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NavigationBarPage extends StatefulWidget {
+class NavigationBarPage extends ConsumerWidget {
   const NavigationBarPage({super.key});
 
   @override
-  State<NavigationBarPage> createState() => NavigationBarPageState();
-}
-
-class NavigationBarPageState extends State<NavigationBarPage> {
-  int _selectedIndex = 0;
-  static const List<Widget> _navigationBarDisplay = <Widget>[
-    // HomePage(),
-    Text("Favorite Page"),
-    Text("Cart Page"),
-    Text("Profile")
-  ];
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+  int selectedIndex = ref.watch(selectedIndexProvider);
+  bool bottomNavBarVisible = ref.watch(bottomNavBarVisibilityProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey,
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: Visibility(
+        visible: bottomNavBarVisible,
+        child: BottomNavigationBar(
+        
         type: BottomNavigationBarType.fixed,
-        onTap: _onItemTapped,
-        currentIndex: _selectedIndex,
+        onTap: (index) {ref.read(selectedIndexProvider.notifier).state = index; },
+        currentIndex: selectedIndex,
         selectedLabelStyle: const TextStyle(
             fontSize: 10, color: Color.fromRGBO(138, 138, 142, 1)),
         unselectedLabelStyle: const TextStyle(fontSize: 10),
         items: [
           BottomNavigationBarItem(
-              icon: _selectedIndex == 0
+              icon: selectedIndex == 0
                   ? const Icon(
                       Icons.home,
                       color: Color.fromRGBO(98, 175, 28, 1),
@@ -42,7 +38,7 @@ class NavigationBarPageState extends State<NavigationBarPage> {
                     ),
               label: 'Главная'),
           BottomNavigationBarItem(
-              icon: _selectedIndex == 1
+              icon: selectedIndex == 1
                   ? const Icon(
                       Icons.favorite,
                       color: Color.fromRGBO(98, 175, 28, 1),
@@ -53,7 +49,7 @@ class NavigationBarPageState extends State<NavigationBarPage> {
                     ),
               label: 'Избранное'),
           BottomNavigationBarItem(
-              icon: _selectedIndex == 2
+              icon: selectedIndex == 2
                   ? const Icon(
                       Icons.shopping_cart,
                       color: Color.fromRGBO(98, 175, 28, 1),
@@ -64,7 +60,7 @@ class NavigationBarPageState extends State<NavigationBarPage> {
                     ),
               label: 'Корзина'),
           BottomNavigationBarItem(
-              icon: _selectedIndex == 3
+              icon: selectedIndex == 3
                   ? const Icon(
                       Icons.person,
                       color: Color.fromRGBO(98, 175, 28, 1),
@@ -76,14 +72,15 @@ class NavigationBarPageState extends State<NavigationBarPage> {
               label: 'Профиль'),
         ],
       ),
+      ) ,
       body: SafeArea(
         top: false,
         child: IndexedStack(
-          index: _selectedIndex,
+          index: selectedIndex,
           children: [
             HomePage(),
-            Container(color: Colors.lightBlue,),
-            Container(color: Colors.lightGreen,),
+            const FavoritePage(),
+            CartPage(),
             Container(color: Colors.pink,),
           ],
         ),
@@ -92,9 +89,9 @@ class NavigationBarPageState extends State<NavigationBarPage> {
     );
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _selectedIndex = index;
+  //   });
+  // }
 }
