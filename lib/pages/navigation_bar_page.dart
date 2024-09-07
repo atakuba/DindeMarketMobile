@@ -1,6 +1,7 @@
 import 'package:dinde_market/pages/navigation_page/cart_page/cart_page.dart';
 import 'package:dinde_market/pages/navigation_page/favorite_page/favorite_page.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/home_page.dart';
+import 'package:dinde_market/pages/navigation_page/profile_page/profile_page.dart';
 import 'package:dinde_market/provider/buttom_nav_bar_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,18 +81,11 @@ class NavigationBarPage extends ConsumerWidget {
           children: [
             HomePage(),
             const FavoritePage(),
-            CartPage(),
-            Container(color: Colors.pink,),
+            const CartPage(),
+            const ProfilePage()
           ],
         ),
-        // child: _navigationBarDisplay.elementAt(_selectedIndex),
       ),
     );
   }
-
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _selectedIndex = index;
-  //   });
-  // }
 }

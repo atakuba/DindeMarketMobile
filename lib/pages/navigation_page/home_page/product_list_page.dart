@@ -3,6 +3,7 @@ import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/filter_page.dart';
 import 'package:dinde_market/provider/buttom_nav_bar_provider.dart';
 import 'package:dinde_market/provider/favorite_list_provider.dart';
+import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/product_card.dart';
 import 'package:dinde_market/widgets/product_card_layout.dart';

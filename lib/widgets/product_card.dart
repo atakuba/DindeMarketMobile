@@ -1,7 +1,10 @@
 import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/product_page.dart';
+import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/provider/favorite_list_provider.dart';
+import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
+import 'package:dinde_market/widgets/count_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,7 +15,7 @@ class ProductCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isFavorite = ref.watch(favoriteListNotifierProvider.notifier).isFavorite(product);
-
+    final isInCart = ref.watch(cartListNotifierProvider.notifier).notInCart(product);
     return Container(
       margin: const EdgeInsets.all(9),
       width: MediaQuery.of(context).size.width / 2,
@@ -77,7 +80,7 @@ class ProductCard extends ConsumerWidget {
               top: 6,
             ),
             child: Text(
-              '${product.price} с/шт',
+              '${product.price.round()} с/шт',
               style: const TextStyle(color: Color.fromRGBO(98, 175, 28, 1)),
             ),
           ),
@@ -102,8 +105,8 @@ class ProductCard extends ConsumerWidget {
               color: const Color.fromRGBO(98, 175, 28, 1),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: SizedBox(
-              height: Utilities.setWidgetHeightByPercentage(context, 4.1),
+            child: isInCart ? SizedBox(
+              height: Utilities.setWidgetHeightByPercentage(context, 3.9),
               width: Utilities.setWidgetWidthByPercentage(context, 39.2),
               child: TextButton(
                 child: const Text(
@@ -113,9 +116,12 @@ class ProductCard extends ConsumerWidget {
                     fontSize: 16,
                     fontWeight: FontWeight.w600),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  ref.read(cartListNotifierProvider.notifier).countIncrement(product);
+                },
+                
               ),
-            ),
+            ) : CountCard(ref: ref, product: product,)
           ),
         ],
       ),

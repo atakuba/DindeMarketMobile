@@ -76,7 +76,6 @@ class SubCategoryPage extends StatelessWidget {
                                 alignment: Alignment.centerLeft,
                                 height: Utilities.setWidgetHeightByPercentage(context, 5.5),
                                 child: Text(
-                                  // to-do check if this is a defect
                                   subCategory.name,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w500,

@@ -1,9 +1,10 @@
+import 'package:dinde_market/provider/products_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/models/mock_data/mock_data.dart';
 
 // Provider for the list of products
-final productListProvider = StateProvider<List<Product>>((ref) => MyProducts.productList.toList());
+// final productListProvider = StateProvider<List<Product>>((ref) => MyProducts.productList.toList());
 
 // StateNotifierProvider for the list of favorite products
 final favoriteListNotifierProvider = StateNotifierProvider<FavoriteListNotifier, List<Product>>((ref) {
@@ -22,23 +23,27 @@ class FavoriteListNotifier extends StateNotifier<List<Product>> {
     });
   }
 
-  void toggleFavorite(Product product) {
-    final productList = ref.read(productListProvider);
+ void toggleFavorite(Product product) {
+  if (!mounted) print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"); // Check if the widget is still mounted
 
-    // Update the favorite status of the product in the product list
-    final updatedProductList = productList.map((p) {
-      if (p.id == product.id) {
-        return p.copyWith(favorite: !p.favorite);
-      }
-      return p;
-    }).toList();
+  final productListNotifier = ref.read(productListProvider.notifier);
+  final productList = productListNotifier.state;
 
-    // Update the product list provider with the new favorite status
-    ref.read(productListProvider.notifier).state = updatedProductList;
+  // Update the favorite status of the product in the product list
+  final updatedProductList = productList.map((p) {
+    if (p.id == product.id) {
+      return p.copyWith(favorite: !p.favorite);
+    }
+    return p;
+  }).toList();
 
-    // Update the state with the new favorite list
-    state = updatedProductList.where((p) => p.favorite).toList();
-  }
+  // Update the product list provider with the new favorite status
+  productListNotifier.state = updatedProductList;
+
+  // Update the state with the new favorite list
+  // state = updatedProductList.where((p) => p.favorite).toList();
+}
+
 
   bool isFavorite(Product product) {
     return state.contains(product);

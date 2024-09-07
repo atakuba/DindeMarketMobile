@@ -8,7 +8,8 @@ class Product {
   final String description;
   final SubCategory subCategory;
   bool favorite;
-  int quantity;
+  int count;
+  final int discount;
 
   Product({
     required this.id,
@@ -18,7 +19,8 @@ class Product {
     required this.description,
     required this.subCategory,
     this.favorite = false,
-    this.quantity = 0,
+    this.count = 1,
+    required this.discount,
   });
 
   Product copyWith({
@@ -29,7 +31,8 @@ class Product {
     String? description,
     SubCategory? subCategory,
     bool? favorite,
-    int? quantity,
+    int? count,
+    int? discount,
   }) {
     return Product(
       id: id ?? this.id,
@@ -39,7 +42,8 @@ class Product {
       description: description ?? this.description,
       subCategory: subCategory ?? this.subCategory,
       favorite: favorite ?? this.favorite,
-      quantity: quantity ?? this.quantity,
+      count: count ?? this.count,
+      discount: discount ?? this.discount
     );
   }
 }

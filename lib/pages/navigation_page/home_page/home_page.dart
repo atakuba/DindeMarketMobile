@@ -167,6 +167,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _categoryScrollBar() {
     return GridView.builder(
+      padding: EdgeInsets.zero,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 10,
