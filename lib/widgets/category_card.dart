@@ -1,5 +1,6 @@
 import 'package:dinde_market/models/category.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/sub_category_page.dart';
+import 'package:dinde_market/utility/utilities.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatefulWidget {
@@ -21,6 +22,7 @@ class CategoryCardState extends State<CategoryCard> {
       Expanded(
         flex: 1,
         child: Container(
+          width: Utilities.setWidgetWidthByPercentage(context, 28.8),
           alignment: Alignment.center,
           decoration: const BoxDecoration(
             color: Colors.white,
@@ -32,6 +34,7 @@ class CategoryCardState extends State<CategoryCard> {
       Expanded(
         flex: 2,
         child: Container(
+          width: Utilities.setWidgetWidthByPercentage(context, 28.8),
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))

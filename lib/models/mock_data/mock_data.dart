@@ -1,4 +1,6 @@
 
+import 'dart:collection';
+
 import 'package:dinde_market/models/order.dart';
 import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/models/sub_category.dart';
@@ -156,8 +158,8 @@ class OrderedProducts {
 
 class MyOrders {
   static List<Order> orderList = [
-    Order(id: 1, orderNumber: 123, orderStatus: OrderStatus.underReview, marketName: "Dordoi", customerName: "Kiril", customerAddress: CustomerAddress(id: 1, city: "Бишкек", street: "ул. Медерова 40", customerCommments: "Пожалуйста предварительно позвоните мне"), orderedProducts: OrderedProducts.orderedProducts, totalOrderPrice: 5000, orderDate: DateTime.now()),
-    Order(id: 2, orderNumber: 321, orderStatus: OrderStatus.accepted, marketName: "Tsum Aichurok", customerName: "Edil", customerAddress: CustomerAddress(id: 2, city: "Бишкек", street: "ул. Медерова 22222", customerCommments: "Пожалуйста предварительно позвоните мне"), orderedProducts: OrderedProducts.orderedProducts, totalOrderPrice: 22000, orderDate: DateTime.now()),
-    Order(id: 1, orderNumber: 213, orderStatus: OrderStatus.completed, marketName: "Osh Bazar", customerName: "Danil", customerAddress: CustomerAddress(id: 3, city: "Бишкек", entrance: "3rd entrance", unit: "106", floor: "lobby", street: "ул. Медерова 404", customerCommments: "Пожалуйста предварительно позвоните мне"), orderedProducts: OrderedProducts.orderedProducts, totalOrderPrice: 100, orderDate: DateTime.now()),
+    Order(id: 1, orderNumber: 123, orderStatus: {OrderStatus.underReview: DateTime.now()}, marketName: "Dordoi", customerName: "Kiril", customerAddress: CustomerAddress(id: 1, city: "Бишкек", street: "ул. Медерова 40", customerCommments: "Пожалуйста предварительно позвоните мне"), orderedProducts: OrderedProducts.orderedProducts, totalOrderPrice: 5000, orderDate: DateTime.now()),
+    Order(id: 2, orderNumber: 321, orderStatus: {OrderStatus.underReview: DateTime.now(), OrderStatus.accepted: DateTime.now().add(Duration(days: 2, hours: 5))}, marketName: "Tsum Aichurok", customerName: "Edil", customerAddress: CustomerAddress(id: 2, city: "Бишкек", street: "ул. Медерова 22222", customerCommments: "Пожалуйста предварительно позвоните мне"), orderedProducts: OrderedProducts.orderedProducts, totalOrderPrice: 22000, orderDate: DateTime.now()),
+    Order(id: 1, orderNumber: 213, orderStatus: {OrderStatus.underReview: DateTime.now(), OrderStatus.accepted: DateTime.now().add(Duration(days: 2, hours: 5)), OrderStatus.completed: DateTime.now().add(Duration(days: 2, hours: 5))}, marketName: "Osh Bazar", customerName: "Danil", customerAddress: CustomerAddress(id: 3, city: "Бишкек", entrance: "3rd entrance", unit: "106", floor: "lobby", street: "ул. Медерова 404", customerCommments: "Пожалуйста предварительно позвоните мне"), orderedProducts: OrderedProducts.orderedProducts, totalOrderPrice: 100, orderDate: DateTime.now()),
   ];
 }

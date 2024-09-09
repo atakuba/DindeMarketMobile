@@ -1,9 +1,10 @@
 import 'package:dinde_market/models/product.dart';
+import 'package:intl/intl.dart';
 
 class Order{
   final int id;
   final int orderNumber;
-  final OrderStatus orderStatus;
+  final Map<OrderStatus, DateTime> orderStatus;
   final String marketName;
   final String customerName;
   final CustomerAddress customerAddress;
@@ -12,6 +13,19 @@ class Order{
   final DateTime orderDate;
 
   Order({required this.id, required this.orderNumber, required this.orderStatus, required this.marketName, required this.customerName, required this.customerAddress, required this.orderedProducts, required this.totalOrderPrice, required this.orderDate});
+
+  void setOrderDateTime(OrderStatus status, DateTime dateTime) {
+    orderStatus[status] = dateTime;
+  }
+  String getOrderDateTime(OrderStatus status) {
+    try{
+      String dateTime = DateFormat('MM.dd.yyyy/ hh:mm').format(orderStatus[status]!);
+    return dateTime;
+    }catch(e) {
+      return "";
+    }
+    
+  }
 }
 
 enum OrderStatus {
