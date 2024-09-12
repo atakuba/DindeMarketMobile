@@ -11,8 +11,10 @@ class Order{
   final List<Product> orderedProducts;
   final int totalOrderPrice;
   final DateTime orderDate;
+  final int totalDiscount;
+  final String receiptMessage;
 
-  Order({required this.id, required this.orderNumber, required this.orderStatus, required this.marketName, required this.customerName, required this.customerAddress, required this.orderedProducts, required this.totalOrderPrice, required this.orderDate});
+  Order({required this.receiptMessage, required this.totalDiscount, required this.id, required this.orderNumber, required this.orderStatus, required this.marketName, required this.customerName, required this.customerAddress, required this.orderedProducts, required this.totalOrderPrice, required this.orderDate});
 
   void setOrderDateTime(OrderStatus status, DateTime dateTime) {
     orderStatus[status] = dateTime;
@@ -20,6 +22,15 @@ class Order{
   String getOrderDateTime(OrderStatus status) {
     try{
       String dateTime = DateFormat('MM.dd.yyyy/ hh:mm').format(orderStatus[status]!);
+    return dateTime;
+    }catch(e) {
+      return "";
+    }
+    
+  }
+  String getOrderDate(OrderStatus status) {
+    try{
+      String dateTime = DateFormat('MM.dd.yyyy').format(orderStatus[status]!);
     return dateTime;
     }catch(e) {
       return "";

@@ -2,7 +2,6 @@ import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/product_page.dart';
 import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/provider/favorite_list_provider.dart';
-import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/count_card.dart';
 import 'package:flutter/material.dart';

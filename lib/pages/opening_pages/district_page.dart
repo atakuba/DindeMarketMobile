@@ -1,5 +1,8 @@
+import 'package:dinde_market/pages/opening_pages/district_modal_widget.dart';
+import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DistrictPage extends StatelessWidget {
   const DistrictPage({super.key});
@@ -50,7 +53,9 @@ class DistrictPage extends StatelessWidget {
                 width: Utilities.setWidgetWidthByPercentage(context, 91.5),
                 height: Utilities.setWidgetHeightByPercentage(context, 4.7),
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                   style: TextButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(98, 175, 28, 1),
                     shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)),),
@@ -78,67 +83,29 @@ class DistrictDropDown extends StatefulWidget {
 }
 
 class _DropdownMenuExampleState extends State<DistrictDropDown> {
-    static const List<String> _districts = ['г. Бишкек', 'г. Ош', 'Баткенская область', 'Джалал-Абадская область', 'Иссык-Кульская область', 'Нарынская область', 'Ошская область', 'Таласская область', 'Чуйская область'];
-  String dropdownValue = _districts.first;
-  
+  String dropdownValue = "";
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
+    return Consumer(
+      builder: (context, ref, child) {
+        final List<String> districtList = ref.read(districtProvider.notifier).state.toList();
+          dropdownValue = districtList.first;
+        return SizedBox.expand(
           child: TextButton(
             style: TextButton.styleFrom(
               side: const BorderSide(color: Color.fromRGBO(177, 207, 183, 1), width: 1.0),
               shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)),),
             ),
               child: Text(dropdownValue, textAlign: TextAlign.center,),
-            onPressed: () => showModal(context),
+            onPressed: () async {
+              final selectedDistrict = await DistrictModal.districtModalWidget(context: context, districtList: districtList);
+              setState(() {
+                dropdownValue = selectedDistrict;
+              });
+            } 
           ),
     );
-  }
-void showModal(context){
-    showModalBottomSheet(
-      context: context,
-      builder: (context){
-        return Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-          Container(
-            height: Utilities.setWidgetHeightByPercentage(context, 57.5),
-            decoration: const BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)), color: Colors.white),
-          ),
-          Container(
-            color: Colors.white,
-            height: Utilities.setWidgetHeightByPercentage(context, 54.0),
-            alignment: Alignment.center,
-            child: ListView.separated(
-              itemCount: _districts.length,
-              separatorBuilder: (context, int) {
-                return const SizedBox.shrink();
-              },
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  child: Container(
-                    height: Utilities.setWidgetHeightByPercentage(context, 6.2),
-                    decoration: const BoxDecoration(
-                      border: Border(bottom: BorderSide(color: Colors.grey, width: 0.6))
-                    ),
-                    child: Row(children: [
-                      Container(padding: const EdgeInsets.symmetric(horizontal: 10), child: const Icon(Icons.adjust),),
-                      Text(_districts[index], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),),
-                    ],)
-                  ),
-                  onTap: () {
-                    setState(() {
-                      dropdownValue = _districts[index];
-                    });
-                    Navigator.of(context).pop();
-                  }
-                );
-              }
-            ),
-          )
-        ],
-        );
-      }
+      },
     );
   }
 }

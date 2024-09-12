@@ -24,7 +24,6 @@ class FavoriteListNotifier extends StateNotifier<List<Product>> {
   }
 
  void toggleFavorite(Product product) {
-  if (!mounted) print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"); // Check if the widget is still mounted
 
   final productListNotifier = ref.read(productListProvider.notifier);
   final productList = productListNotifier.state;
@@ -39,9 +38,6 @@ class FavoriteListNotifier extends StateNotifier<List<Product>> {
 
   // Update the product list provider with the new favorite status
   productListNotifier.state = updatedProductList;
-
-  // Update the state with the new favorite list
-  // state = updatedProductList.where((p) => p.favorite).toList();
 }
 
 

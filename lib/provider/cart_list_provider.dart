@@ -94,8 +94,6 @@ class CartListNotifier extends StateNotifier<List<Product>> {
 void removeAllProductsFromCart(List<Product> productListInCart) {
   final productListNotifier = ref.read(productListProvider.notifier);
 
-  if (!mounted) print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"); // Check if the widget is still mounted
-
   final productList = productListNotifier.state;
   final updatedProductList = productList.map((p) => p.copyWith(count: 0)).toList();
   

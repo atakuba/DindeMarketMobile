@@ -1,13 +1,15 @@
+import 'package:flutter/material.dart';
+
 import 'package:dinde_market/models/mock_data/mock_data.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/category_card.dart';
 import 'package:dinde_market/widgets/serach_bar.dart';
-import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -24,10 +26,6 @@ class _HomePageState extends State<HomePage> {
           // Define your routes here
           WidgetBuilder builder;
           switch (settings.name) {
-            // case '/':
-            //   builder = (BuildContext context) => _buildHomePageContent(context);
-            //   break;
-            // Add more routes here if needed
             default:
               builder = (BuildContext context) => _buildHomePageContent(context);
           }

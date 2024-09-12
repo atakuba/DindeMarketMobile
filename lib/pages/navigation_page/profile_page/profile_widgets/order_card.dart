@@ -36,14 +36,14 @@ class _OrderCardState extends ConsumerState<OrderCard> {
       ),
       width: Utilities.setWidgetWidthByPercentage(context, 91.5),
       height: Utilities.setWidgetHeightByPercentage(context, 69.2),
-      margin: EdgeInsets.only(bottom: 35),
+      margin: const EdgeInsets.only(bottom: 35),
       child: Column(
         children: [
           Expanded(
             flex: 86,
             child: Container(
               alignment: Alignment.center,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               color: Colors.white,
       ),
@@ -330,7 +330,7 @@ class _OrderCardState extends ConsumerState<OrderCard> {
           Container(
             color: Colors.white,
             child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 13),
+            padding: const EdgeInsets.symmetric(horizontal: 13),
               child: const Divider(color: Color.fromRGBO(232, 239, 249, 1), height: 3,),
             )
           ),
@@ -343,35 +343,33 @@ class _OrderCardState extends ConsumerState<OrderCard> {
               child: Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Icon(Icons.my_location_outlined, color: Colors.orange,),
-                        dashedLine(Color.fromRGBO(166, 166, 166, 1), isHorizontal: false),
-                        Icon(Icons.location_on_outlined, color: Colors.green,)
+                        const Icon(Icons.my_location_outlined, color: Colors.orange,),
+                        dashedLine(const Color.fromRGBO(166, 166, 166, 1), isHorizontal: false),
+                        const Icon(Icons.location_on_outlined, color: Colors.green,)
                       ],
                     ),
                   ),
-                  Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(top: 10),
-                          child: Text(widget.order.marketName, style: TextStyle(color: Color.fromRGBO(166, 166, 166, 1), fontSize: 14, fontWeight: FontWeight.w500),),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(widget.order.customerName, style: TextStyle(color: Color.fromRGBO(166, 166, 166, 1), fontSize: 14, fontWeight: FontWeight.w500),),
-                        Text("г. ${widget.order.customerAddress.city}, ул. ${widget.order.customerAddress.street}", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                        Text("Квартира ${widget.order.customerAddress.unit}, Подъезд ${widget.order.customerAddress.entrance}, Этаж ${widget.order.customerAddress.floor}", style: TextStyle( fontSize: 11, fontWeight: FontWeight.w500),)
-                          ],
-                        )
-                      ],
-                    ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Text(widget.order.marketName, style: const TextStyle(color: Color.fromRGBO(166, 166, 166, 1), fontSize: 14, fontWeight: FontWeight.w500),),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(widget.order.customerName, style: const TextStyle(color: Color.fromRGBO(166, 166, 166, 1), fontSize: 14, fontWeight: FontWeight.w500),),
+                      Text("г. ${widget.order.customerAddress.city}, ул. ${widget.order.customerAddress.street}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+                      Text("Квартира ${widget.order.customerAddress.unit}, Подъезд ${widget.order.customerAddress.entrance}, Этаж ${widget.order.customerAddress.floor}", style: const TextStyle( fontSize: 11, fontWeight: FontWeight.w500),)
+                        ],
+                      )
+                    ],
                   )
                 ],
               ),
@@ -384,16 +382,16 @@ class _OrderCardState extends ConsumerState<OrderCard> {
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.only(left: 15, right: 15, bottom: 3, top: 12),
+                    padding: const EdgeInsets.only(left: 15, right: 15, bottom: 3, top: 12),
                     alignment: Alignment.topLeft,
-                    child: Text("Комментарий:"),
+                    child: const Text("Комментарий:"),
                   ),
                   Container(
                     width: Utilities.setWidgetWidthByPercentage(context, 87.2),
                     height: Utilities.setWidgetHeightByPercentage(context, 8.6),
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Color.fromRGBO(228, 238, 252, 1), width: 1),
+                      border: Border.all(color: const Color.fromRGBO(228, 238, 252, 1), width: 1),
                       borderRadius: BorderRadius.circular(11)
                     ),
                     alignment: Alignment.centerLeft,
@@ -426,33 +424,33 @@ class _OrderCardState extends ConsumerState<OrderCard> {
             child: Container(
               color: Colors.white,
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-      color: Color.fromRGBO(117, 203, 39, 0.1),
-      border: Border.all(color: Color.fromRGBO(117, 203, 39, 0.5), width: 1),
+      color: const Color.fromRGBO(117, 203, 39, 0.1),
+      border: Border.all(color: const Color.fromRGBO(117, 203, 39, 0.5), width: 1),
       borderRadius: BorderRadius.circular(11)
     ),
-                child: Text("Итого к оплате: ${widget.order.totalOrderPrice} сом", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),),
+                child: Text("Итого к оплате: ${widget.order.totalOrderPrice} сом", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),),
               ),
             ),
           ),
           Expanded(
             flex: 70,
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
               ),
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 15, vertical: 16),
+                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 16),
                 decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(8)
                 ),
                 alignment: Alignment.center,
                 child: TextButton(
-                  child: Text("Отменить заказ", style: TextStyle(color: Colors.white),),
+                  child: const Text("Отменить заказ", style: TextStyle(color: Colors.white),),
                   onPressed: () {},
                 ),
               ),
@@ -499,11 +497,11 @@ Widget orderedProductCard(Product product, BuildContext context) {
   return Container(
     width: Utilities.setWidgetWidthByPercentage(context, 66),
     height: Utilities.setWidgetHeightByPercentage(context, 11.1),
-    margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+    margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
 
     decoration: BoxDecoration(
       color: Colors.white,
-      border: Border.all(color: Color.fromRGBO(228, 238, 252, 1), width: 1),
+      border: Border.all(color: const Color.fromRGBO(228, 238, 252, 1), width: 1),
       borderRadius: BorderRadius.circular(11)
     ),
     child: Row(
@@ -512,7 +510,7 @@ Widget orderedProductCard(Product product, BuildContext context) {
           width: 130,
           height: 90,
           alignment: Alignment.centerLeft,
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Image(image: AssetImage(product.picture),)
         ),
         SizedBox(

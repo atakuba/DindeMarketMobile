@@ -1,14 +1,10 @@
-import 'package:dinde_market/models/mock_data/mock_data.dart';
 import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/filter_page.dart';
 import 'package:dinde_market/provider/buttom_nav_bar_provider.dart';
-import 'package:dinde_market/provider/favorite_list_provider.dart';
 import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
-import 'package:dinde_market/widgets/product_card.dart';
 import 'package:dinde_market/widgets/product_card_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductListPage extends StatefulWidget {
@@ -23,7 +19,7 @@ class ProductListPage extends StatefulWidget {
 
 class _ProductListPageState extends State<ProductListPage> {
   String _sortOption = 'По умолчанию';
-  RangeValues? _rangeValues = null;
+  RangeValues? _rangeValues;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,13 +127,11 @@ class _ProductListPageState extends State<ProductListPage> {
                               final RangeValues values =
                                   await Navigator.of(context).push(
                                       MaterialPageRoute(
-                                          builder: (context) => FilterPage()));
-                              if (values != null) {
-                                setState(() {
-                                  _rangeValues = values;
-                                });
-                              }
-                            },
+                                          builder: (context) => const FilterPage()));
+                              setState(() {
+                                _rangeValues = values;
+                              });
+                                                        },
                           );
                         },
                       )
@@ -333,7 +327,7 @@ class FullScreenPageRoute extends PageRouteBuilder {
 void showFullScreenOverlay(BuildContext context) {
   final overlay = Overlay.of(context);
   final overlayEntry = OverlayEntry(
-    builder: (context) => Positioned.fill(
+    builder: (context) => const Positioned.fill(
       child: FilterPage(),
     ),
   );
