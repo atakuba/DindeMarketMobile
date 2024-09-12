@@ -10,8 +10,10 @@ class Product {
   bool favorite;
   int count;
   final int discount;
+  final bool newProduct;
 
   Product({
+    required this.newProduct,
     required this.id,
     required this.name,
     required this.picture,
@@ -33,6 +35,7 @@ class Product {
     bool? favorite,
     int? count,
     int? discount,
+    bool? newProduct,
   }) {
     return Product(
       id: id ?? this.id,
@@ -43,7 +46,8 @@ class Product {
       subCategory: subCategory ?? this.subCategory,
       favorite: favorite ?? this.favorite,
       count: count ?? this.count,
-      discount: discount ?? this.discount
+      discount: discount ?? this.discount,
+      newProduct: newProduct ?? this.newProduct,
     );
   }
 }

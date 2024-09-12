@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/product_page.dart';
 import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/provider/favorite_list_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/count_card.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductCard extends ConsumerWidget {
   final Product product;
@@ -50,6 +51,40 @@ class ProductCard extends ConsumerWidget {
                   },
                 ),
               ),
+              Positioned(
+      left: 0, 
+      child: Container(
+        alignment: Alignment.centerLeft,
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          product.newProduct ? Container(
+            margin: const EdgeInsets.symmetric(vertical: 4),
+        width: Utilities.setWidgetWidthByPercentage(context, 19),
+        height: Utilities.setWidgetHeightByPercentage(context, 3.3),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+        color: const Color.fromRGBO(244, 234, 11, 1),
+        ),
+        alignment: Alignment.center,
+        child: const Text("Новинка"),
+          ): Container(),
+          Container(
+        width: Utilities.setWidgetWidthByPercentage(context, 13),
+        height: Utilities.setWidgetHeightByPercentage(context, 3.3),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+        color: Colors.red,
+        ),
+        alignment: Alignment.center,
+        child: Text("-${product.discount}%", style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),),
+      ),
+        ],
+      ),
+      )
+    ),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                 height: Utilities.setWidgetHeightByPercentage(context, 3.94),

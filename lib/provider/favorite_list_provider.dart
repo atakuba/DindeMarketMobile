@@ -1,12 +1,7 @@
 import 'package:dinde_market/provider/products_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dinde_market/models/product.dart';
-import 'package:dinde_market/models/mock_data/mock_data.dart';
 
-// Provider for the list of products
-// final productListProvider = StateProvider<List<Product>>((ref) => MyProducts.productList.toList());
-
-// StateNotifierProvider for the list of favorite products
 final favoriteListNotifierProvider = StateNotifierProvider<FavoriteListNotifier, List<Product>>((ref) {
   final productList = ref.watch(productListProvider);
   final favoriteProducts = productList.where((product) => product.favorite).toList();
