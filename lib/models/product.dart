@@ -11,6 +11,7 @@ class Product {
   int count;
   final int discount;
   final bool newProduct;
+  final bool seasonal;
 
   Product({
     required this.newProduct,
@@ -23,6 +24,7 @@ class Product {
     this.favorite = false,
     this.count = 1,
     required this.discount,
+    required this.seasonal,
   });
 
   Product copyWith({
@@ -36,6 +38,7 @@ class Product {
     int? count,
     int? discount,
     bool? newProduct,
+    bool? seasonal,
   }) {
     return Product(
       id: id ?? this.id,
@@ -48,6 +51,7 @@ class Product {
       count: count ?? this.count,
       discount: discount ?? this.discount,
       newProduct: newProduct ?? this.newProduct,
+      seasonal: seasonal ?? this.seasonal,
     );
   }
 }
