@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductListPage extends StatefulWidget {
-  final int subCategoryID;
-  final String subCategoryName;
+  final List<Product> productListDisplay;
+  final String pageTitle;
   const ProductListPage(
-      {super.key, required this.subCategoryID, required this.subCategoryName});
+      {super.key, required this.productListDisplay, required this.pageTitle});
 
   @override
   State<ProductListPage> createState() => _ProductListPageState();
@@ -24,7 +24,8 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.subCategoryName),
+          centerTitle: true,
+          title: Text(widget.pageTitle),
           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         ),
         body: SafeArea(
@@ -150,11 +151,11 @@ class _ProductListPageState extends State<ProductListPage> {
                       child: _rangeValues == null
                           ? _sortProductList(
                               sortOption: _sortOption,
-                              subCategoryID: widget.subCategoryID,
+                              productList: widget.productListDisplay,
                               ref: ref)
                           : _sortProductList(
                               sortOption: _sortOption,
-                              subCategoryID: widget.subCategoryID,
+                              productList: widget.productListDisplay,
                               values: _rangeValues,
                               ref: ref));
                 },
@@ -168,69 +169,27 @@ class _ProductListPageState extends State<ProductListPage> {
 Widget _sortProductList(
     {String? sortOption,
     RangeValues? values,
-    required int subCategoryID,
+    required List<Product> productList,
     required WidgetRef ref}) {
-  var filteredProducts = _productListItems(
-      ref: ref, productFilter: 'category', subCategoryID: subCategoryID);
   List<Product> filterByPriceRange = [];
   if (values != null) {
-    filterByPriceRange = filteredProducts
+    filterByPriceRange = productList
         .where((product) =>
             product.price >= values.start && product.price <= values.end)
         .toList();
     filterByPriceRange.sort((a, b) => a.name.compareTo(b.name));
-    filteredProducts = filterByPriceRange;
+    productList = filterByPriceRange;
   }
   if (sortOption == 'Сначала подешевле') {
-    filteredProducts.sort((a, b) => a.price.compareTo(b.price));
+    productList.sort((a, b) => a.price.compareTo(b.price));
   } else if (sortOption == 'Сначала подороже') {
-    filteredProducts.sort((a, b) => a.price.compareTo(b.price));
-    var descOrder = filteredProducts.reversed.toList();
+    productList.sort((a, b) => a.price.compareTo(b.price));
+    var descOrder = productList.reversed.toList();
     return ProductCardLayout.productCardLayout(productList: descOrder);
   } else if (sortOption == 'По алфавиту') {
-    filteredProducts.sort((a, b) => a.name.compareTo(b.name));
+    productList.sort((a, b) => a.name.compareTo(b.name));
   }
-  return ProductCardLayout.productCardLayout(productList: filteredProducts);
-}
-// Widget _productCardLayout({required List<Product> productList}) {
-//   return GridView.builder(
-//       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//         crossAxisCount: 2,
-//         childAspectRatio: (100 / 150),
-//         crossAxisSpacing: 1,
-//         mainAxisSpacing: 3,
-//       ),
-//       scrollDirection: Axis.vertical,
-//       itemCount: productList.length,
-//       itemBuilder: (context, index) {
-//         return ProductCard(product: productList[index]);
-//       });
-// }
-
-List<Product> _productListItems(
-    {required WidgetRef ref,
-    required String productFilter,
-    int? subCategoryID}) {
-  final localProductList = ref.watch(productListProvider);
-
-  if (productFilter == 'category') {
-    return localProductList
-        .where((category) => category.subCategory.id == subCategoryID)
-        .toList();
-  } else if (productFilter == 'news') {
-    return localProductList
-        .where((category) => category.subCategory.name == 'Новинки')
-        .toList();
-  } else if (productFilter == 'seasonal') {
-    return localProductList
-        .where((category) => category.subCategory.name == 'Сезонные продукты')
-        .toList();
-  } else if (productFilter == 'sales') {
-    return localProductList
-        .where((category) => category.subCategory.name == 'Акции')
-        .toList();
-  }
-  return List.empty();
+  return ProductCardLayout.productCardLayout(productList: productList);
 }
 
 void showModal({

@@ -1,8 +1,11 @@
 import 'package:dinde_market/models/mock_data/mock_data.dart';
+import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/product_list_page.dart';
+import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/serach_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SubCategoryPage extends StatelessWidget {
   final int categoryID;
@@ -59,7 +62,10 @@ class SubCategoryPage extends StatelessWidget {
                       height:
                           Utilities.setWidgetHeightByPercentage(context, 61),
                       width: Utilities.setWidgetWidthByPercentage(context, 95),
-                      child: ListView.separated(
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          final productList = ref.watch(productListProvider);
+                          return ListView.separated(
                         itemCount: MySubCategories.subCategoryList.length,
                         padding: EdgeInsets.zero,
                         separatorBuilder: (BuildContext context, int index) =>
@@ -70,6 +76,7 @@ class SubCategoryPage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final subCategory =
                               MySubCategories.subCategoryList[index];
+                              final subCategoryProductList = productList.where((p) => p.subCategory.id == subCategory.id).toList();
                           if (categoryID == subCategory.category.id) {
                             return InkWell(
                               child: Container(
@@ -82,11 +89,13 @@ class SubCategoryPage extends StatelessWidget {
                                       fontSize: 15),
                                 ),
                               ),
-                              onTap: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage(subCategoryID: subCategory.id, subCategoryName: subCategory.name)));},
+                              onTap: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage(productListDisplay: subCategoryProductList, pageTitle: subCategory.name)));},
                             );
                           } else {
                             return const SizedBox.shrink();
                           }
+                        },
+                      );
                         },
                       ),
                     ),

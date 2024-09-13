@@ -1,9 +1,12 @@
+import 'package:dinde_market/pages/navigation_page/home_page/product_list_page.dart';
+import 'package:dinde_market/provider/products_provider.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dinde_market/models/mock_data/mock_data.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/category_card.dart';
 import 'package:dinde_market/widgets/serach_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -84,7 +87,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                       Expanded(
                         flex: 2,
-                        child: Container(
+                        child: Consumer(
+                          builder: (context, ref, child) {
+                            return Container(
                           padding: EdgeInsets.symmetric(horizontal: Utilities.setWidgetWidthByPercentage(context, 4.5)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,21 +101,17 @@ class _HomePageState extends State<HomePage> {
                                     context: context,
                                     text: "Новинки",
                                     fileName: 'assets/offers/news_pic.png',
+                                    ref: ref
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.only(top: Utilities.setWidgetHeightByPercentage(context, 1)),
-                                    child: Image(
-                                      image: const AssetImage("assets/offers/news_pic_content.png"),
-                                      width: Utilities.setWidgetWidthByPercentage(context, 20.5),
-                                    ),
-                                  )
                                 ],
                               ),
-                              _specialOfferBox(context: context, text: "Акции", fileName: 'assets/offers/sales_pic.png'),
-                              _specialOfferBox(context: context, text: "Сезонные продукты", fileName: 'assets/offers/seasonal_products_pic.png'),
+                              _specialOfferBox(ref: ref, context: context, text: "Акции", fileName: 'assets/offers/sales_pic.png'),
+                              _specialOfferBox(ref: ref, context: context, text: "Сезонные продукты", fileName: 'assets/offers/seasonal_products_pic.png'),
                             ],
                           ),
-                        ),
+                        );
+                          },
+                        )
                       ),
                     ],
                   ),
@@ -138,15 +139,30 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _specialOfferBox({required BuildContext context, required String text, required String fileName}) {
+  Widget _specialOfferBox({required BuildContext context, required String text, required String fileName, required WidgetRef ref}) {
+    final productList = ref.read(productListProvider);
+    final newProductList = productList.where((p) => p.newProduct).toList();
+    final discountProductList = productList.where((p) => p.discount != 0).toList();
+    final seasonalProductList = productList.where((p) => p.seasonal).toList();
     return Column(
       children: [
-        SizedBox(
+        InkWell(
+          child: SizedBox(
           height: Utilities.setWidgetHeightByPercentage(context, 13.05),
           child: Image(
             image: AssetImage(fileName),
             width: Utilities.setWidgetWidthByPercentage(context, 28.3),
           ),
+        ),
+        onTap: () {
+          if(text == "Новинки") {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage(productListDisplay: newProductList, pageTitle: text)));
+          } else if(text == "Акции") {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage(productListDisplay: discountProductList, pageTitle: text)));
+          } else {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage(productListDisplay: seasonalProductList, pageTitle: text)));
+          }
+        },
         ),
         Container(
           alignment: Alignment.center,

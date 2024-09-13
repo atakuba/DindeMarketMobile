@@ -39,6 +39,7 @@ class TotalPriceWidget {
                 customerCommments: "Leave at my porch"),
             orderedProducts: [
               Product(
+                seasonal: true,
                 newProduct: true,
                   discount: 50,
                   favorite: true,

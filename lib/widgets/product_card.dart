@@ -1,3 +1,4 @@
+import 'package:dinde_market/provider/products_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,7 +15,7 @@ class ProductCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorite = ref.watch(favoriteListNotifierProvider.notifier).isFavorite(product);
+    final isFavorite = ref.watch(productListProvider).where((p) => p.id == product.id).first.favorite;
     final isInCart = ref.watch(cartListNotifierProvider.notifier).notInCart(product);
     return Container(
       margin: const EdgeInsets.all(9),
@@ -71,7 +72,7 @@ class ProductCard extends ConsumerWidget {
         alignment: Alignment.center,
         child: const Text("Новинка"),
           ): Container(),
-          Container(
+        product.discount != 0 ?  Container(
         width: Utilities.setWidgetWidthByPercentage(context, 13),
         height: Utilities.setWidgetHeightByPercentage(context, 3.3),
         decoration: BoxDecoration(
@@ -80,7 +81,7 @@ class ProductCard extends ConsumerWidget {
         ),
         alignment: Alignment.center,
         child: Text("-${product.discount}%", style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),),
-      ),
+      ) : Container()
         ],
       ),
       )
