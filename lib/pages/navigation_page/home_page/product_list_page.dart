@@ -191,46 +191,6 @@ Widget _sortProductList(
   }
   return ProductCardLayout.productCardLayout(productList: productList);
 }
-// Widget _productCardLayout({required List<Product> productList}) {
-//   return GridView.builder(
-//       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//         crossAxisCount: 2,
-//         childAspectRatio: (100 / 150),
-//         crossAxisSpacing: 1,
-//         mainAxisSpacing: 3,
-//       ),
-//       scrollDirection: Axis.vertical,
-//       itemCount: productList.length,
-//       itemBuilder: (context, index) {
-//         return ProductCard(product: productList[index]);
-//       });
-// }
-
-// List<Product> _productListItems(
-//     {required WidgetRef ref,
-//     required String productFilter,
-//     int? subCategoryID}) {
-//   final localProductList = ref.watch(productListProvider);
-
-//   if (productFilter == 'category') {
-//     return localProductList
-//         .where((category) => category.subCategory.id == subCategoryID)
-//         .toList();
-//   } else if (productFilter == 'news') {
-//     return localProductList
-//         .where((category) => category.subCategory.name == 'Новинки')
-//         .toList();
-//   } else if (productFilter == 'seasonal') {
-//     return localProductList
-//         .where((category) => category.subCategory.name == 'Сезонные продукты')
-//         .toList();
-//   } else if (productFilter == 'sales') {
-//     return localProductList
-//         .where((category) => category.subCategory.name == 'Акции')
-//         .toList();
-//   }
-//   return List.empty();
-// }
 
 void showModal({
   required BuildContext context,

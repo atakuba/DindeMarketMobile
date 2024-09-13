@@ -101,9 +101,6 @@ class ProductCard extends ConsumerWidget {
                     color: Colors.red,
                   ),
                   onTap: () {
-                    
-    print("####################");
-    print(isFavorite);
                     ref.read(favoriteListNotifierProvider.notifier).toggleFavorite(product);
                   },
                 ),
