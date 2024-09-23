@@ -15,6 +15,13 @@ class OrderCard extends ConsumerStatefulWidget {
 }
 
 class _OrderCardState extends ConsumerState<OrderCard> {
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     bool statusCompleted =
@@ -407,8 +414,9 @@ class _OrderCardState extends ConsumerState<OrderCard> {
               color: Colors.white,
               child: Scrollbar(
                 thumbVisibility: true,
+                controller: _scrollController,
                 child: ListView.builder(
-                
+                controller: _scrollController,
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.order.orderedProducts.length,
                 itemBuilder: (context, index) {

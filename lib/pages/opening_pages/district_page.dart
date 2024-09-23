@@ -1,3 +1,4 @@
+import 'package:dinde_market/pages/navigation_bar_page.dart';
 import 'package:dinde_market/pages/opening_pages/district_modal_widget.dart';
 import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
@@ -54,7 +55,7 @@ class DistrictPage extends StatelessWidget {
                 height: Utilities.setWidgetHeightByPercentage(context, 4.7),
                 child: TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NavigationBarPage()));
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(98, 175, 28, 1),

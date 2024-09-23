@@ -19,6 +19,7 @@ class _CountCardState extends State<CountCard> {
     int counter = widget.ref
         .watch(cartListNotifierProvider.notifier)
         .productFinalCount(widget.product);
+        
     CartListNotifier cartController =
         widget.ref.watch(cartListNotifierProvider.notifier);
     return Container(
@@ -36,7 +37,8 @@ class _CountCardState extends State<CountCard> {
               child: InkWell(
                 child: const Icon(Icons.remove, color: Color.fromRGBO(151, 152, 153, 1),),
                 onTap: () {
-                  cartController.countDecrement(widget.product);
+                  // widget.product.copyWith(count: counter);
+                  cartController.countDecrement(widget.product, counter);
                 },
               ),
             ),

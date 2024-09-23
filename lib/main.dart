@@ -1,7 +1,7 @@
 import 'package:dinde_market/pages/navigation_bar_page.dart';
+import 'package:dinde_market/pages/opening_pages/district_page.dart';
 import 'package:dinde_market/provider/token_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -19,14 +19,11 @@ class MyApp extends StatelessWidget {
     
     return Consumer(
       builder: (context, ref, child) {
-        // getToken(secureStorage, ref);
-        // final token = ref.watch(tokenProvider.notifier);
-        // print("******************************");
-        // print(token);
+        getToken(secureStorage, ref);
+        final token = ref.read(tokenProvider.notifier).state;
         return MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: token != "" ? NavigationBarPage() : Container(color: Colors.pink,)
-      home: NavigationBarPage()
+      home: token == "" ? DistrictPage() : NavigationBarPage()
     );
       },
     );
