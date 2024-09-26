@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CountCard extends StatefulWidget {
   final WidgetRef ref;
-  Product product;
-  CountCard({super.key, required this.ref, required this.product});
+  final Product product;
+  const CountCard({super.key, required this.ref, required this.product});
 
   @override
   State<CountCard> createState() => _CountCardState();
@@ -19,6 +19,7 @@ class _CountCardState extends State<CountCard> {
     int counter = widget.ref
         .watch(cartListNotifierProvider.notifier)
         .productFinalCount(widget.product);
+        
     CartListNotifier cartController =
         widget.ref.watch(cartListNotifierProvider.notifier);
     return Container(
@@ -36,7 +37,8 @@ class _CountCardState extends State<CountCard> {
               child: InkWell(
                 child: const Icon(Icons.remove, color: Color.fromRGBO(151, 152, 153, 1),),
                 onTap: () {
-                  cartController.countDecrement(widget.product);
+                  // widget.product.copyWith(count: counter);
+                  cartController.countDecrement(widget.product, counter);
                 },
               ),
             ),

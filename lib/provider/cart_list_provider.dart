@@ -54,9 +54,10 @@ class CartListNotifier extends StateNotifier<List<Product>> {
     return getTotalProductPrice() - getTotalDiscount();
   }
 
-  void countDecrement(Product product) {
+  void countDecrement(Product product, int count) {
+    product.count = count;
     if (product.count != 0) {
-      final productListNotifier = ref.read(productListProvider.notifier);
+      final productListNotifier = ref.watch(productListProvider.notifier);
       final productList = productListNotifier.state;
 
       // Update the count of the specified product
