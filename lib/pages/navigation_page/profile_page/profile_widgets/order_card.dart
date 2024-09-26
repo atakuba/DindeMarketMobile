@@ -15,13 +15,14 @@ class OrderCard extends ConsumerStatefulWidget {
 }
 
 class _OrderCardState extends ConsumerState<OrderCard> {
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     bool statusCompleted =
@@ -31,16 +32,14 @@ class _OrderCardState extends ConsumerState<OrderCard> {
     bool statusAccepted =
         widget.order.getOrderDateTime(OrderStatus.accepted) != "";
     return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            spreadRadius: 3,
-            blurRadius: 5,
-            offset: const Offset(0, 0),
-          ),
-        ]
-      ),
+      decoration: BoxDecoration(boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          spreadRadius: 3,
+          blurRadius: 5,
+          offset: const Offset(0, 0),
+        ),
+      ]),
       width: Utilities.setWidgetWidthByPercentage(context, 91.5),
       height: Utilities.setWidgetHeightByPercentage(context, 69.2),
       margin: const EdgeInsets.only(bottom: 35),
@@ -51,9 +50,11 @@ class _OrderCardState extends ConsumerState<OrderCard> {
             child: Container(
               alignment: Alignment.center,
               decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-              color: Colors.white,
-      ),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10)),
+                color: Colors.white,
+              ),
               child: Column(
                 children: [
                   Row(
@@ -335,28 +336,37 @@ class _OrderCardState extends ConsumerState<OrderCard> {
             ),
           ),
           Container(
-            color: Colors.white,
-            child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 13),
-              child: const Divider(color: Color.fromRGBO(232, 239, 249, 1), height: 3,),
-            )
-          ),
+              color: Colors.white,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 13),
+                child: const Divider(
+                  color: Color.fromRGBO(232, 239, 249, 1),
+                  height: 3,
+                ),
+              )),
           Expanded(
             flex: 116,
             child: Container(
-              color: Colors.white
-              ,
+              color: Colors.white,
               alignment: Alignment.center,
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(Icons.my_location_outlined, color: Colors.orange,),
-                        dashedLine(const Color.fromRGBO(166, 166, 166, 1), isHorizontal: false),
-                        const Icon(Icons.location_on_outlined, color: Colors.green,)
+                        const Icon(
+                          Icons.my_location_outlined,
+                          color: Colors.orange,
+                        ),
+                        dashedLine(const Color.fromRGBO(166, 166, 166, 1),
+                            isHorizontal: false),
+                        const Icon(
+                          Icons.location_on_outlined,
+                          color: Colors.green,
+                        )
                       ],
                     ),
                   ),
@@ -366,14 +376,34 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                     children: [
                       Container(
                         padding: const EdgeInsets.only(top: 10),
-                        child: Text(widget.order.marketName, style: const TextStyle(color: Color.fromRGBO(166, 166, 166, 1), fontSize: 14, fontWeight: FontWeight.w500),),
+                        child: Text(
+                          widget.order.marketName,
+                          style: const TextStyle(
+                              color: Color.fromRGBO(166, 166, 166, 1),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500),
+                        ),
                       ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.order.customerName, style: const TextStyle(color: Color.fromRGBO(166, 166, 166, 1), fontSize: 14, fontWeight: FontWeight.w500),),
-                      Text("г. ${widget.order.customerAddress.city}, ул. ${widget.order.customerAddress.street}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                      Text("Квартира ${widget.order.customerAddress.unit}, Подъезд ${widget.order.customerAddress.entrance}, Этаж ${widget.order.customerAddress.floor}", style: const TextStyle( fontSize: 11, fontWeight: FontWeight.w500),)
+                          Text(
+                            widget.order.customerName,
+                            style: const TextStyle(
+                                color: Color.fromRGBO(166, 166, 166, 1),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            "г. ${widget.order.customerAddress.city}, ул. ${widget.order.customerAddress.street}",
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            "Квартира ${widget.order.customerAddress.unit}, Подъезд ${widget.order.customerAddress.entrance}, Этаж ${widget.order.customerAddress.floor}",
+                            style: const TextStyle(
+                                fontSize: 11, fontWeight: FontWeight.w500),
+                          )
                         ],
                       )
                     ],
@@ -389,7 +419,8 @@ class _OrderCardState extends ConsumerState<OrderCard> {
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.only(left: 15, right: 15, bottom: 3, top: 12),
+                    padding: const EdgeInsets.only(
+                        left: 15, right: 15, bottom: 3, top: 12),
                     alignment: Alignment.topLeft,
                     child: const Text("Комментарий:"),
                   ),
@@ -398,9 +429,10 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                     height: Utilities.setWidgetHeightByPercentage(context, 8.6),
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color.fromRGBO(228, 238, 252, 1), width: 1),
-                      borderRadius: BorderRadius.circular(11)
-                    ),
+                        border: Border.all(
+                            color: const Color.fromRGBO(228, 238, 252, 1),
+                            width: 1),
+                        borderRadius: BorderRadius.circular(11)),
                     alignment: Alignment.centerLeft,
                     child: Text(widget.order.customerAddress.customerCommments),
                   )
@@ -416,50 +448,40 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                 thumbVisibility: true,
                 controller: _scrollController,
                 child: ListView.builder(
-                controller: _scrollController,
-                scrollDirection: Axis.horizontal,
-                itemCount: widget.order.orderedProducts.length,
-                itemBuilder: (context, index) {
-                  var product = widget.order.orderedProducts[index];
-                  return orderedProductCard(product, context);
-                },
-              ),
+                  controller: _scrollController,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: widget.order.orderedProducts.length,
+                  itemBuilder: (context, index) {
+                    var product = widget.order.orderedProducts[index];
+                    return orderedProductCard(product, context);
+                  },
+                ),
               ),
             ),
           ),
           Expanded(
             flex: 63,
             child: Container(
-              color: Colors.white,
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-      color: const Color.fromRGBO(117, 203, 39, 0.1),
-      border: Border.all(color: const Color.fromRGBO(117, 203, 39, 0.5), width: 1),
-      borderRadius: BorderRadius.circular(11)
-    ),
-                child: Text("Итого к оплате: ${widget.order.totalOrderPrice} сом", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 70,
-            child: Container(
               decoration: const BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10)),
               ),
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 16),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(8)
-                ),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 alignment: Alignment.center,
-                child: TextButton(
-                  child: const Text("Отменить заказ", style: TextStyle(color: Colors.white),),
-                  onPressed: () {},
+                decoration: BoxDecoration(
+                    color: const Color.fromRGBO(117, 203, 39, 0.1),
+                    border: Border.all(
+                        color: const Color.fromRGBO(117, 203, 39, 0.5),
+                        width: 1),
+                    borderRadius: BorderRadius.circular(11)),
+                child: Text(
+                  "Итого к оплате: ${widget.order.totalOrderPrice} сом",
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w700),
                 ),
               ),
             ),
@@ -481,15 +503,21 @@ Widget dashedLine(Color color, {bool isHorizontal = true}) {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(
               ((isHorizontal
-                      ? constraints.constrainWidth() 
-                      : constraints.constrainHeight()) /
-                  10.floor()).toInt(),
+                          ? constraints.constrainWidth()
+                          : constraints.constrainHeight()) /
+                      10.floor())
+                  .toInt(),
               (index) {
                 return SizedBox(
-                  width: isHorizontal ? 4 : 1, // Width of each dash (for horizontal)
-                  height: isHorizontal ? 1 : 6, // Height of each dash (for vertical)
+                  width: isHorizontal
+                      ? 4
+                      : 1, // Width of each dash (for horizontal)
+                  height: isHorizontal
+                      ? 1
+                      : 6, // Height of each dash (for vertical)
                   child: DecoratedBox(
-                    decoration: BoxDecoration(color: color), // Color of the dashes
+                    decoration:
+                        BoxDecoration(color: color), // Color of the dashes
                   ),
                 );
               },
@@ -506,27 +534,30 @@ Widget orderedProductCard(Product product, BuildContext context) {
     width: Utilities.setWidgetWidthByPercentage(context, 66),
     height: Utilities.setWidgetHeightByPercentage(context, 11.1),
     margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-
     decoration: BoxDecoration(
-      color: Colors.white,
-      border: Border.all(color: const Color.fromRGBO(228, 238, 252, 1), width: 1),
-      borderRadius: BorderRadius.circular(11)
-    ),
+        color: Colors.white,
+        border:
+            Border.all(color: const Color.fromRGBO(228, 238, 252, 1), width: 1),
+        borderRadius: BorderRadius.circular(11)),
     child: Row(
       children: [
         Container(
-          width: 130,
-          height: 90,
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Image(image: AssetImage(product.picture),)
-        ),
+            width: 130,
+            height: 90,
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Image(
+              image: AssetImage(product.picture),
+            )),
         SizedBox(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Товар: ${product.subCategory.name}", overflow: TextOverflow.fade,),
+              Text(
+                "Товар: ${product.subCategory.name}",
+                overflow: TextOverflow.fade,
+              ),
               Text("Количество: ${product.count}"),
               Text("Цена: ${product.price}")
             ],

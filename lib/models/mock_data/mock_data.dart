@@ -1,3 +1,4 @@
+import 'package:dinde_market/models/about_app.dart';
 import 'package:dinde_market/models/order.dart';
 import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/models/sub_category.dart';
@@ -159,4 +160,10 @@ class MyOrders {
     Order(receiptMessage: "blabla",totalDiscount: 99, id: 2, orderNumber: 321, orderStatus: {OrderStatus.underReview: DateTime.now(), OrderStatus.accepted: DateTime.now().add(Duration(days: 2, hours: 5))}, marketName: "Tsum Aichurok", customerName: "Edil", customerAddress: CustomerAddress(id: 2, city: "Бишкек", street: "ул. Медерова 22222", customerCommments: "Пожалуйста предварительно позвоните мне"), orderedProducts: OrderedProducts.orderedProducts, totalOrderPrice: 22000, orderDate: DateTime.now()),
     Order(receiptMessage: "blabla",totalDiscount: 99, id: 1, orderNumber: 213, orderStatus: {OrderStatus.underReview: DateTime.now(), OrderStatus.accepted: DateTime.now().add(Duration(days: 2, hours: 5)), OrderStatus.completed: DateTime.now().add(Duration(days: 2, hours: 5))}, marketName: "Osh Bazar", customerName: "Danil", customerAddress: CustomerAddress(id: 3, city: "Бишкек", entrance: "3rd entrance", unit: "106", floor: "lobby", street: "ул. Медерова 404", customerCommments: "Пожалуйста предварительно позвоните мне"), orderedProducts: OrderedProducts.orderedProducts, totalOrderPrice: 100, orderDate: DateTime.now()),
   ];
+}
+
+class MyAboutApp {
+  static AboutApp aboutApp = AboutApp(title: "Please, read carefully", titleAndContext: [{'key': 'Глава 1', 'value': 'Парень, который сделал это приложение в настоящее время студент идет на Национальный Louis University, преследуя степень компьютерных наук. Его зовут Ата. На самом деле полное имя Atabek Kubanychbek uulu. Он также работает в Университетском центре в качестве резидента советника на второй год. Ата в этом году скоро закончит обучение в Национальном университете Луис. Поэтому ему нужно сделать что-то, связанное с его интересом, что поможет ему быть выдающимся, когда он войдет на рынок труда. Ата завершает процесс подачи заявки и находится на заключительном этапе. Теперь ему нужно добавить несколько заметок на статических страницах, и они должны появиться в мобильном приложении. На этом он прощается с первой главой.'},
+    {'key': 'Глава 2', 'value': 'Эта глава посвящена тому, как Ата пытается научиться испанскому языку. "Hola!" - он хочет. Однако его намерения очень сильны, и он, кажется, получает это раньше, чем другие думают. Лично по моему личному мнению он делает это просто отлично! Ему просто нужно, чтобы это было последовательным. На этом этапе Ата может заказать мороженое на испанском языке.'},
+    {'key': 'Глава 3', 'value': 'Это последняя глава, в которой Ата прощается! Он говорит, что увидит вас в будущих проектах, где он будет делать проекты еще больших размеров. Теперь можно поздравить Ату с его первым официальным коммерческим проектом, где он взял всю разработку мобильного приложения и сделал так. Удачи тебе, Ата!'},]);
 }

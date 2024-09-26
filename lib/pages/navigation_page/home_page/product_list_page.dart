@@ -1,7 +1,6 @@
 import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/filter_page.dart';
 import 'package:dinde_market/provider/buttom_nav_bar_provider.dart';
-import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/product_card_layout.dart';
 import 'package:flutter/material.dart';
@@ -128,11 +127,12 @@ class _ProductListPageState extends State<ProductListPage> {
                               final RangeValues values =
                                   await Navigator.of(context).push(
                                       MaterialPageRoute(
-                                          builder: (context) => const FilterPage()));
+                                          builder: (context) =>
+                                              const FilterPage()));
                               setState(() {
                                 _rangeValues = values;
                               });
-                                                        },
+                            },
                           );
                         },
                       )
@@ -232,7 +232,7 @@ void showModal({
                 Expanded(
                   child: ListView.separated(
                     itemCount: sortBy.length,
-                    separatorBuilder: (context, int) {
+                    separatorBuilder: (context, int1) {
                       return const SizedBox.shrink();
                     },
                     itemBuilder: (context, index) {

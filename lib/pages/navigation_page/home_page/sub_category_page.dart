@@ -1,11 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:dinde_market/models/mock_data/mock_data.dart';
-import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/product_list_page.dart';
 import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/serach_bar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SubCategoryPage extends StatelessWidget {
   final int categoryID;

@@ -11,7 +11,7 @@ import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 
 class TotalPriceWidget {
-  static totalPriceCalculation({required String textButton}) {
+  static totalPriceCalculation({GlobalKey<FormState>? formKey, VoidCallback? validationform, required String textButton, bool? paymentSelected}) {
     return Consumer(
       builder: (context, ref, child) {
         final totalProductCount =
@@ -198,9 +198,31 @@ class TotalPriceWidget {
                                 ))
                             : TextButton(
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
+                                  if(formKey!=null) {
+                                    if(formKey.currentState!.validate()) {
+                                      print("***********************");
+                                      print("first check point");
+                                      print(paymentSelected);
+                                          if (validationform != null) {
+        validationform();
+      }
+                                      print(paymentSelected);
+                                      if(paymentSelected!=null) {
+                                        if(paymentSelected) {
+                                       Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
                                           ReceiptPage(ref: ref, order: order)));
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                  content:
+                                      Text("Успешно изменено")),
+                            );                
+                                        }
+                                      }
+                                                        
+                                  }
+                                  }
+                                 
                                 },
                                 child: Text(
                                   textButton,

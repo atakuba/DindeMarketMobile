@@ -115,12 +115,31 @@ class _CartPageState extends State<CartPage> {
                                     decoration: BoxDecoration(
                                         // color: Colors.lightBlue,
                                         borderRadius: BorderRadius.circular(4)),
-                                    child: Image(
+                                    child: Stack(
+                                      children: [
+                                        Image(
                                       image: AssetImage(product.picture),
                                       fit: BoxFit.cover,
                                       width: 100,
                                       height: 100,
-                                    )),
+                                    ),
+                                    Positioned(
+                                      left: 0,
+                                      child: product.discount != 0 ? Container(
+                                        margin: EdgeInsets.only(top: 5),
+        width: Utilities.setWidgetWidthByPercentage(context, 10),
+        height: Utilities.setWidgetHeightByPercentage(context, 2.5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+        color: Colors.red,
+        ),
+        alignment: Alignment.center,
+        child: Text("-${product.discount}%", style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600),),
+      ) : Container(),
+                                    )
+                                      ],
+                                    )
+                                    ),
                               ),
                               Expanded(
                                   flex: 7,

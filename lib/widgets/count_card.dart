@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CountCard extends StatefulWidget {
   final WidgetRef ref;
-  Product product;
-  CountCard({super.key, required this.ref, required this.product});
+  final Product product;
+  const CountCard({super.key, required this.ref, required this.product});
 
   @override
   State<CountCard> createState() => _CountCardState();

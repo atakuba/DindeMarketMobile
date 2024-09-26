@@ -4,12 +4,15 @@ import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class DistrictPage extends StatelessWidget {
   const DistrictPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+  var selectedDistrict = "";
+    final secureStorage = const FlutterSecureStorage();
     return Scaffold(
       backgroundColor: const Color.fromRGBO(244, 245, 249, 1),
       body: Column(
@@ -50,11 +53,15 @@ class DistrictPage extends StatelessWidget {
             flex: 445,
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: SizedBox(
+              child: Consumer(
+                builder: (context, ref, child) {
+                  return SizedBox(
                 width: Utilities.setWidgetWidthByPercentage(context, 91.5),
                 height: Utilities.setWidgetHeightByPercentage(context, 4.7),
                 child: TextButton(
                   onPressed: () {
+                    secureStorage.write(key: "auth_token", value: "token added************************************");
+                    // ref.read(tokenProvider.notifier).state = "token added";
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => NavigationBarPage()));
                   },
                   style: TextButton.styleFrom(
@@ -63,7 +70,9 @@ class DistrictPage extends StatelessWidget {
                   ),
                   child: const Text("Далее", style: TextStyle(color: Colors.white),),
                 )
-              )
+              );
+                },
+              ),
             )
           ),
           Expanded(

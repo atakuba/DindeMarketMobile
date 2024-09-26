@@ -41,6 +41,8 @@ dependencies:
   intl: ^0.17.0
   flutter_secure_storage: ^8.0.0
   flutter_native_splash: ^2.2.1
+  url_launcher: ^6.3.0
+  external_app_launcher: ^2.0.2
 
 
 dev_dependencies:
