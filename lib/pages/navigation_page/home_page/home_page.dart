@@ -1,26 +1,62 @@
-import 'package:dinde_market/pages/navigation_page/home_page/product_list_page.dart';
-import 'package:dinde_market/provider/products_provider.dart';
+import 'dart:convert';
+import 'package:dinde_market/models/category.dart';
+import 'package:dinde_market/provider/token_provider.dart';
 import 'package:flutter/material.dart';
-
-import 'package:dinde_market/models/mock_data/mock_data.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/category_card.dart';
 import 'package:dinde_market/widgets/serach_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 
-class HomePage extends StatefulWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final GlobalKey<NavigatorState> homePageNavigatorKey = GlobalKey<NavigatorState>();
+class _HomePageState extends ConsumerState<HomePage> {
+  final GlobalKey<NavigatorState> homePageNavigatorKey =
+      GlobalKey<NavigatorState>();
+  var urlPrefix = "http://dindemarket.eu-north-1.elasticbeanstalk.com";
+  List<Category> categoryList = [];
+
+  Future<void> fetchCategories() async {
+    final response = await http.get(
+      Uri.parse('$urlPrefix/api/categories'),
+      headers: {
+        'Authorization': 'Bearer ${ref.read(tokenProvider)}',
+        'Content-Type': 'application/json'
+      },
+    );
+    if (response.statusCode == 200) {
+      // If the server returns an OK response, parse the JSON.
+      var decodeFormat = utf8.decode(response.bodyBytes);
+      var data = json.decode(decodeFormat);
+      if (data is List) {
+        List<Category> categoryList = data
+            .map((json) => Category.fromJson(json))
+            .cast<Category>()
+            .toList();
+        setState(() {
+          this.categoryList = categoryList;
+        });
+      } else {}
+    } else {
+      // If the server did not return a 200 OK response, throw an exception.
+      throw Exception('Failed to load data');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCategories();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // print(categoryList.first.name);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Navigator(
@@ -30,7 +66,8 @@ class _HomePageState extends State<HomePage> {
           WidgetBuilder builder;
           switch (settings.name) {
             default:
-              builder = (BuildContext context) => _buildHomePageContent(context);
+              builder =
+                  (BuildContext context) => _buildHomePageContent(context);
           }
           return MaterialPageRoute(builder: builder);
         },
@@ -83,14 +120,14 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                         flex: 1,
-                        child: CustomizedSearchBar(context: context,),
+                        child: CustomizedSearchBar(context: context),
                       ),
                       Expanded(
                         flex: 2,
-                        child: Consumer(
-                          builder: (context, ref, child) {
-                            return Container(
-                          padding: EdgeInsets.symmetric(horizontal: Utilities.setWidgetWidthByPercentage(context, 4.5)),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Utilities.setWidgetWidthByPercentage(
+                                  context, 4.5)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -101,17 +138,21 @@ class _HomePageState extends State<HomePage> {
                                     context: context,
                                     text: "Новинки",
                                     fileName: 'assets/offers/news_pic.png',
-                                    ref: ref
                                   ),
                                 ],
                               ),
-                              _specialOfferBox(ref: ref, context: context, text: "Акции", fileName: 'assets/offers/sales_pic.png'),
-                              _specialOfferBox(ref: ref, context: context, text: "Сезонные продукты", fileName: 'assets/offers/seasonal_products_pic.png'),
+                              _specialOfferBox(
+                                  context: context,
+                                  text: "Акции",
+                                  fileName: 'assets/offers/sales_pic.png'),
+                              _specialOfferBox(
+                                  context: context,
+                                  text: "Сезонные продукты",
+                                  fileName:
+                                      'assets/offers/seasonal_products_pic.png'),
                             ],
                           ),
-                        );
-                          },
-                        )
+                        ),
                       ),
                     ],
                   ),
@@ -120,14 +161,19 @@ class _HomePageState extends State<HomePage> {
                   flex: 7,
                   child: Container(
                     alignment: Alignment.centerLeft,
-                    padding: EdgeInsets.only(left: Utilities.setWidgetWidthByPercentage(context, 5)),
-                    child: const Text("Категории", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700)),
+                    padding: EdgeInsets.only(
+                        left: Utilities.setWidgetWidthByPercentage(context, 5)),
+                    child: const Text("Категории",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700)),
                   ),
                 ),
                 Expanded(
                   flex: 53,
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: Utilities.setWidgetWidthByPercentage(context, 4.3)),
+                    padding: EdgeInsets.symmetric(
+                        horizontal:
+                            Utilities.setWidgetWidthByPercentage(context, 4.3)),
                     child: _categoryScrollBar(),
                   ),
                 ),
@@ -139,30 +185,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _specialOfferBox({required BuildContext context, required String text, required String fileName, required WidgetRef ref}) {
-    final productList = ref.read(productListProvider);
-    final newProductList = productList.where((p) => p.newProduct).toList();
-    final discountProductList = productList.where((p) => p.discount != 0).toList();
-    final seasonalProductList = productList.where((p) => p.seasonal).toList();
+  Widget _specialOfferBox(
+      {required BuildContext context,
+      required String text,
+      required String fileName}) {
     return Column(
       children: [
         InkWell(
           child: SizedBox(
-          height: Utilities.setWidgetHeightByPercentage(context, 13.05),
-          child: Image(
-            image: AssetImage(fileName),
-            width: Utilities.setWidgetWidthByPercentage(context, 28.3),
+            height: Utilities.setWidgetHeightByPercentage(context, 13.05),
+            child: Image(
+              image: AssetImage(fileName),
+              width: Utilities.setWidgetWidthByPercentage(context, 28.3),
+            ),
           ),
-        ),
-        onTap: () {
-          if(text == "Новинки") {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage(productListDisplay: newProductList, pageTitle: text)));
-          } else if(text == "Акции") {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage(productListDisplay: discountProductList, pageTitle: text)));
-          } else {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductListPage(productListDisplay: seasonalProductList, pageTitle: text)));
-          }
-        },
+          onTap: () {
+            print(ref.read(tokenProvider.notifier).state);
+          },
         ),
         Container(
           alignment: Alignment.center,
@@ -188,11 +227,10 @@ class _HomePageState extends State<HomePage> {
         mainAxisSpacing: 12,
       ),
       itemBuilder: (context, index) {
-        final allCategories = MyCategories.categoryList[index];
-        return CategoryCard(category: allCategories);
+        return CategoryCard(category: categoryList[index]);
       },
       scrollDirection: Axis.vertical,
-      itemCount: MyCategories.categoryList.length,
+      itemCount: categoryList.length,
     );
   }
 }

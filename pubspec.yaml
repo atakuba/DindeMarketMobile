@@ -43,6 +43,9 @@ dependencies:
   flutter_native_splash: ^2.2.1
   url_launcher: ^6.3.0
   external_app_launcher: ^2.0.2
+  http: ^0.13.5
+  sqflite: ^2.0.0+4
+  path: ^1.8.1
 
 
 dev_dependencies:

@@ -1,3 +1,4 @@
+import 'package:dinde_market/models/district.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,11 +40,11 @@ class _EditUserPageState extends State<EditUserPage> {
     return Scaffold(
       body: Consumer(
         builder: (context, ref, child) {
-          final List<String> districtList =
+          final List<District> districtList =
               ref.read(districtProvider.notifier).state.toList();
 
           if (selectedDistrict == "") {
-            selectedDistrict = ref.read(userProvider).region;
+            selectedDistrict = ref.read(userProvider).region.name;
           }
 
           return Container(
@@ -152,7 +153,7 @@ class _EditUserPageState extends State<EditUserPage> {
                                   if (widget.isTextField) {
                                     if (widget.title == "Имя") {
                                       if (value == null || value.isEmpty) {
-                                        return 'Пожалуйста, введите имя'; // Validation message
+                                        return 'Пожалуйста, введите имя';
                                       } else if (value.length < 2) {
                                         return 'Имя должно содержать не менее 2 символов';
                                       } else if (!RegExp(r'^[a-zA-Z]+$')
@@ -161,7 +162,7 @@ class _EditUserPageState extends State<EditUserPage> {
                                       }
                                     } else if (widget.title == "Фамилия") {
                                       if (value == null || value.isEmpty) {
-                                        return 'Пожалуйста, введите фамилию'; // Validation message
+                                        return 'Пожалуйста, введите фамилию';
                                       } else if (value.length < 2) {
                                         return 'Фамилия должна содержать не менее 2 символов';
                                       } else if (!RegExp(r'^[a-zA-Z]+$')
@@ -171,11 +172,11 @@ class _EditUserPageState extends State<EditUserPage> {
                                     } else if (widget.title ==
                                         "Номер телефона") {
                                       if (value == null || value.isEmpty) {
-                                        return 'Пожалуйста, введите номер телефона'; // Please enter a phone number
+                                        return 'Пожалуйста, введите номер телефона';
                                       } else if (!RegExp(
                                               r'^\+996 \(\d{3}\) \d{2} \d{2} \d{2}$')
                                           .hasMatch(value)) {
-                                        return 'Формат номера телефона: +996 (XXX) XX XX XX'; // Phone number must follow the format +996 (XXX) XX XX XX
+                                        return 'Формат номера телефона: +996 (XXX) XX XX XX';
                                       }
                                     }
                                   }

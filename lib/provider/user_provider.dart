@@ -1,10 +1,5 @@
 
-// import 'package:dinde_market/models/user.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// final userProvider = StateProvider<User>((ref) => User(id: 1, firstName: "Muku", lastName: "Kuba", phoneNumber: "99999999", region: "Naryn"));
-
-
+import 'package:dinde_market/models/district.dart';
 import 'package:dinde_market/models/user.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,7 +9,9 @@ class UserNotifier extends StateNotifier<User> {
     firstName: 'John', 
     lastName: 'Doe', 
     phoneNumber: '+996 (707) 23 10 88', 
-    region: 'Нарынская область',
+    region: District(id: 1, name: "", priceDelivery: 2),
+    address: '',
+    username: ''
   ));  // Initial user state
 
   // Method to update the user's first name
@@ -33,8 +30,16 @@ class UserNotifier extends StateNotifier<User> {
   }
 
   // Method to update the user's region
-  void updateRegion(String newRegion) {
+  void updateRegion(District newRegion) {
     state = state.copyWith(region: newRegion);
+  }
+
+  void updateUsername(String newUsername) {
+    state = state.copyWith(username: newUsername);
+  }
+
+  void updateAddress(String newAddress) {
+    state = state.copyWith(addresss: newAddress);
   }
 
   // Method to update the whole user

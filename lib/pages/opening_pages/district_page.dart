@@ -1,18 +1,75 @@
-import 'package:dinde_market/pages/navigation_bar_page.dart';
+import 'dart:convert';
+
+import 'package:dinde_market/main.dart';
+import 'package:dinde_market/models/district.dart';
 import 'package:dinde_market/pages/opening_pages/district_modal_widget.dart';
 import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
-class DistrictPage extends StatelessWidget {
+class DistrictPage extends ConsumerStatefulWidget {
   const DistrictPage({super.key});
 
   @override
+  _DistrictPageState createState() => _DistrictPageState();
+}
+
+class _DistrictPageState extends ConsumerState<DistrictPage> {
+  String selectedDistrict = "";
+  var urlPrefix = "http://dindemarket.eu-north-1.elasticbeanstalk.com";
+  final FlutterSecureStorage secureStorage = const FlutterSecureStorage();
+  List<District> districtList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchRegions();
+  }
+
+  Future<void> fetchRegions() async {
+    final response = await http.get(Uri.parse('$urlPrefix/api/regions'));
+    if (response.statusCode == 200) {
+      // If the server returns an OK response, parse the JSON.
+      var decodeFormat = utf8.decode(response.bodyBytes);
+      var data = json.decode(decodeFormat);
+      if (data is List) {
+        districtList = data.map((json) => District.fromJson(json)).toList();
+        addDistricts(ref, districtList);
+        selectedDistrict = districtList.first.name;
+        setState(() {});
+      } else {
+        print('Error: Decoded data is not a list');
+      }
+    } else {
+      // If the server did not return a 200 OK response, throw an exception.
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<void> postRegionsID(int regionID) async {
+    final url = Uri.parse("$urlPrefix/api/clients");
+    final headers = {'Content-Type': 'application/json'};
+    final body = jsonEncode({"regionId": regionID});
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        var decodeFormat = utf8.decode(response.bodyBytes);
+        final data = jsonDecode(decodeFormat);
+        secureStorage.write(key: "auth_token", value: data['token']);
+      } else {
+        print('Failed to post data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-  var selectedDistrict = "";
-    final secureStorage = const FlutterSecureStorage();
     return Scaffold(
       backgroundColor: const Color.fromRGBO(244, 245, 249, 1),
       body: Column(
@@ -21,101 +78,86 @@ class DistrictPage extends StatelessWidget {
             flex: 220,
             child: Container(
               alignment: Alignment.bottomCenter,
-              child: Image(image: const AssetImage('assets/green_logo.png'), width: Utilities.setWidgetWidthByPercentage(context, 19.6)),
+              child: Image(
+                image: const AssetImage('assets/green_logo.png'),
+                width: Utilities.setWidgetWidthByPercentage(context, 19.6),
+              ),
             ),
           ),
           Expanded(
             flex: 113,
-            child: Container(    
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(flex:33, child: Container()),
-                  Expanded (
-                    flex: 38,
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: const Text("Выберите ваш регион", style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                    ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  alignment: Alignment.center,
+                  child: const Text(
+                    "Выберите Регион",
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                   ),
-                  Expanded(
-                    flex: 42,
-                    child: SizedBox(
-                      width: Utilities.setWidgetWidthByPercentage(context, 91.5),
-                      child: const DistrictDropDown(),
-                    )
-                  ),
-                ],
-              ),
+                ),
+                SizedBox(
+                  width: Utilities.setWidgetWidthByPercentage(context, 90),
+                  child: TextButton(
+                      style: TextButton.styleFrom(
+                        side: const BorderSide(
+                            color: Color.fromRGBO(177, 207, 183, 1),
+                            width: 1.0),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        ),
+                      ),
+                      child: Text(
+                        selectedDistrict,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(),
+                      ),
+                      onPressed: () async {
+                        final newDistrict =
+                            await DistrictModal.districtModalWidget(
+                                context: context, districtList: districtList);
+                        setState(() {
+                          selectedDistrict = newDistrict;
+                        });
+                      }),
+                ),
+              ],
             ),
           ),
           Expanded(
             flex: 445,
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: Consumer(
-                builder: (context, ref, child) {
-                  return SizedBox(
+              child: SizedBox(
                 width: Utilities.setWidgetWidthByPercentage(context, 91.5),
                 height: Utilities.setWidgetHeightByPercentage(context, 4.7),
                 child: TextButton(
                   onPressed: () {
-                    secureStorage.write(key: "auth_token", value: "token added************************************");
-                    // ref.read(tokenProvider.notifier).state = "token added";
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NavigationBarPage()));
+                    if (selectedDistrict.isNotEmpty) {
+                      postRegionsID(districtList
+                          .firstWhere((d) => d.name == selectedDistrict)
+                          .id);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const MyApp()));
+                    }
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: const Color.fromRGBO(98, 175, 28, 1),
-                    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)),),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
                   ),
-                  child: const Text("Далее", style: TextStyle(color: Colors.white),),
-                )
-              );
-                },
+                  child: const Text(
+                    "Далее",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
               ),
-            )
+            ),
           ),
-          Expanded(
-            flex: 34,
-            child: Container(),
-          )
+          const Expanded(flex: 34, child: SizedBox())
         ],
       ),
-    );
-  }
-}
-
-class DistrictDropDown extends StatefulWidget {
-  const DistrictDropDown({super.key});
-
-  @override
-  State<DistrictDropDown> createState() => _DropdownMenuExampleState();
-}
-
-class _DropdownMenuExampleState extends State<DistrictDropDown> {
-  String dropdownValue = "";
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final List<String> districtList = ref.read(districtProvider.notifier).state.toList();
-          dropdownValue = districtList.first;
-        return SizedBox.expand(
-          child: TextButton(
-            style: TextButton.styleFrom(
-              side: const BorderSide(color: Color.fromRGBO(177, 207, 183, 1), width: 1.0),
-              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8)),),
-            ),
-              child: Text(dropdownValue, textAlign: TextAlign.center,),
-            onPressed: () async {
-              final selectedDistrict = await DistrictModal.districtModalWidget(context: context, districtList: districtList);
-              setState(() {
-                dropdownValue = selectedDistrict;
-              });
-            } 
-          ),
-    );
-      },
     );
   }
 }

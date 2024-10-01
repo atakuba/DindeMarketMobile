@@ -22,7 +22,11 @@ class _ProductPageState extends State<ProductPage> {
       backgroundColor: const Color.fromRGBO(244, 245, 249, 1),
       body: Consumer(
         builder: (context, ref, child) {
-    final isFavorite = ref.watch(productListProvider).where((p) => p.id == widget.product.id).first.favorite;
+          final isFavorite = ref
+              .watch(productListProvider)
+              .where((p) => p.id == widget.product.id)
+              .first
+              .favorite;
           final isInCart = ref
               .watch(cartListNotifierProvider.notifier)
               .notInCart(widget.product);
@@ -56,14 +60,18 @@ class _ProductPageState extends State<ProductPage> {
                             horizontal: Utilities.setWidgetWidthByPercentage(
                                 context, 4)),
                         child: InkWell(
-                  child: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
-                    color: Colors.red,
-                  ),
-                  onTap: () {
-                    ref.read(favoriteListNotifierProvider.notifier).toggleFavorite(widget.product);
-                  },
-                ),
+                          child: Icon(
+                            isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border_outlined,
+                            color: Colors.red,
+                          ),
+                          onTap: () {
+                            ref
+                                .read(favoriteListNotifierProvider.notifier)
+                                .toggleFavorite(widget.product);
+                          },
+                        ),
                       ),
                     ],
                   ),
@@ -74,8 +82,8 @@ class _ProductPageState extends State<ProductPage> {
                 child: SizedBox(
                   height: Utilities.setWidgetHeightByPercentage(context, 37),
                   width: Utilities.setWidgetWidthByPercentage(context, 80),
-                  child: Image(
-                    image: AssetImage(widget.product.picture),
+                  child: Image.network(
+                    widget.product.photos.first.url,
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -84,8 +92,8 @@ class _ProductPageState extends State<ProductPage> {
                 flex: 247,
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                      horizontal: Utilities.setWidgetWidthByPercentage(
-                          context, 4.3)),
+                      horizontal:
+                          Utilities.setWidgetWidthByPercentage(context, 4.3)),
                   child: Column(
                     children: [
                       Container(
@@ -131,17 +139,16 @@ class _ProductPageState extends State<ProductPage> {
                         ),
                       ),
                       isInCart
-                          ? 
-                              InkWell(
-                                child: Container(
-                              alignment: Alignment.center,
-                              width: Utilities.setWidgetWidthByPercentage(
-                                  context, 95),
-                              height: Utilities.setWidgetHeightByPercentage(
-                                  context, 5),
-                              decoration: BoxDecoration(
-                                  color: const Color.fromRGBO(98, 175, 28, 1),
-                                  borderRadius: BorderRadius.circular(8)),
+                          ? InkWell(
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: Utilities.setWidgetWidthByPercentage(
+                                    context, 95),
+                                height: Utilities.setWidgetHeightByPercentage(
+                                    context, 5),
+                                decoration: BoxDecoration(
+                                    color: const Color.fromRGBO(98, 175, 28, 1),
+                                    borderRadius: BorderRadius.circular(8)),
                                 child: const Text(
                                   "В корзину",
                                   style: TextStyle(
@@ -150,13 +157,13 @@ class _ProductPageState extends State<ProductPage> {
                                       fontWeight: FontWeight.w600),
                                 ),
                               ),
-                                onTap: () {
-                                  ref
-                                      .read(cartListNotifierProvider.notifier)
-                                      .countIncrement(widget.product);
-                                },
+                              onTap: () {
+                                ref
+                                    .read(cartListNotifierProvider.notifier)
+                                    .amountIncrement(widget.product);
+                              },
                             )
-                          : CountCard(ref: ref, product: widget.product)
+                          : CountCard(product: widget.product)
                     ],
                   ),
                 ),
