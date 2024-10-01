@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:dinde_market/models/mock_data/mock_data.dart';
 import 'package:dinde_market/models/order.dart';
 import 'package:dinde_market/models/product.dart';
+import 'package:dinde_market/models/product_photo.dart';
 import 'package:dinde_market/pages/navigation_page/cart_page/checkout_page.dart';
 import 'package:dinde_market/pages/navigation_page/cart_page/receipt_page.dart';
-import 'package:dinde_market/provider/buttom_nav_bar_provider.dart';
 import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 
 class TotalPriceWidget {
-  static totalPriceCalculation({GlobalKey<FormState>? formKey, VoidCallback? validationform, required String textButton, bool? paymentSelected}) {
+  static totalPriceCalculation(
+      {GlobalKey<FormState>? formKey,
+      VoidCallback? validationform,
+      required String textButton,
+      bool? paymentSelected}) {
     return Consumer(
       builder: (context, ref, child) {
-        final totalProductCount =
-            ref.watch(cartListNotifierProvider.notifier).getTotalProductCount();
+        final totalProductCount = ref
+            .watch(cartListNotifierProvider.notifier)
+            .getTotalProductAmount();
         final totalProductPrice =
             ref.watch(cartListNotifierProvider.notifier).getTotalProductPrice();
         final totalProductDiscount =
@@ -39,24 +43,27 @@ class TotalPriceWidget {
                 customerCommments: "Leave at my porch"),
             orderedProducts: [
               Product(
-                seasonal: true,
-                newProduct: true,
+                  // seasonal: true,
+                  // newProduct: true,
                   discount: 50,
                   favorite: true,
+                  count: 0,
                   id: 16,
+                  releaseDate: DateTime.now(),
                   name: "aКефир отборный Коровка",
-                  picture: "assets/offers/sales_pic.png",
+                  photos: [
+                    ProductPhoto(id: 1, url: "assets/offers/sales_pic.png")
+                  ],
                   price: 1000.0,
                   description:
                       "Organic Mountain works as a seller for many organic growers of organic lemons. Organic lemons are easy to spot in your produce aisle. They are just like regular lemons, but they will usually have a few more scars on the outside of the lemon skin. ",
-                  subCategory: MySubCategories.subCategoryList[1]),
+                  subCategoryId: 1)
             ],
             totalOrderPrice: 6000,
             orderDate: DateTime.now());
         return Container(
           width: double.infinity,
           decoration: const BoxDecoration(
-              // color: Colors.pink,
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10))),
           child: Column(
@@ -179,50 +186,69 @@ class TotalPriceWidget {
                         height:
                             Utilities.setWidgetHeightByPercentage(context, 4.7),
                         child: textButton == "Оформить"
-                            ? TextButton(
-                                onPressed: () {
-                                  ref
-                                      .read(bottomNavBarVisibilityProvider
-                                          .notifier)
-                                      .state = true;
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CheckoutPage()));
-                                },
-                                child: Text(
-                                  textButton,
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16),
-                                ))
+                            ? Container(
+                                alignment: Alignment.center,
+                                child: totalProductCount == 0
+                                    ? Container(
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey,
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        width: Utilities
+                                            .setWidgetWidthByPercentage(
+                                                context, 91),
+                                        height: Utilities
+                                            .setWidgetHeightByPercentage(
+                                                context, 4.7),
+                                        child: Text(
+                                          textButton,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16),
+                                        ),
+                                      )
+                                    : InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const CheckoutPage()));
+                                        },
+                                        child: Text(
+                                          textButton,
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16),
+                                        )),
+                              )
                             : TextButton(
                                 onPressed: () {
-                                  if(formKey!=null) {
-                                    if(formKey.currentState!.validate()) {
-                                      print("***********************");
-                                      print("first check point");
-                                      print(paymentSelected);
-                                          if (validationform != null) {
-        validationform();
-      }
-                                      print(paymentSelected);
-                                      if(paymentSelected!=null) {
-                                        if(paymentSelected) {
-                                       Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          ReceiptPage(ref: ref, order: order)));
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content:
-                                      Text("Успешно изменено")),
-                            );                
+                                  if (formKey != null) {
+                                    if (formKey.currentState!.validate()) {
+                                      if (validationform != null) {
+                                        validationform();
+                                      }
+                                      if (paymentSelected != null) {
+                                        if (paymentSelected) {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ReceiptPage(
+                                                          ref: ref,
+                                                          order: order)));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                                content:
+                                                    Text("Успешно изменено")),
+                                          );
                                         }
                                       }
-                                                        
+                                    }
                                   }
-                                  }
-                                 
                                 },
                                 child: Text(
                                   textButton,

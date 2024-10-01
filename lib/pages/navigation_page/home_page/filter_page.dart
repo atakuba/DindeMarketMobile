@@ -31,7 +31,9 @@ class _FilterPageState extends State<FilterPage> {
             child: Align(
               alignment: Alignment.center,
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: Utilities.setWidgetWidthByPercentage(context, 2)),
+                margin: EdgeInsets.symmetric(
+                    horizontal:
+                        Utilities.setWidgetWidthByPercentage(context, 2)),
                 child: Consumer(
                   builder: (context, ref, child) {
                     return Row(
@@ -39,7 +41,9 @@ class _FilterPageState extends State<FilterPage> {
                       children: [
                         TextButton(
                           onPressed: () {
-                            ref.read(bottomNavBarVisibilityProvider.notifier).state = true;
+                            ref
+                                .read(bottomNavBarVisibilityProvider.notifier)
+                                .state = true;
                             Navigator.of(context).pop(null);
                           },
                           child: const Icon(Icons.close),
@@ -64,7 +68,9 @@ class _FilterPageState extends State<FilterPage> {
           Expanded(
             flex: 68,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: Utilities.setWidgetWidthByPercentage(context, 4.3)),
+              margin: EdgeInsets.symmetric(
+                  horizontal:
+                      Utilities.setWidgetWidthByPercentage(context, 4.3)),
               alignment: Alignment.bottomCenter,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -72,15 +78,24 @@ class _FilterPageState extends State<FilterPage> {
                   Column(
                     children: [
                       Container(
-                        width: Utilities.setWidgetWidthByPercentage(context, 40),
+                        width:
+                            Utilities.setWidgetWidthByPercentage(context, 40),
                         alignment: Alignment.bottomLeft,
-                        child: const Text("от", style: TextStyle(color: Color.fromRGBO(138, 138, 142, 1), fontSize: 14),),
+                        child: const Text(
+                          "от",
+                          style: TextStyle(
+                              color: Color.fromRGBO(138, 138, 142, 1),
+                              fontSize: 14),
+                        ),
                       ),
                       SizedBox(
-                        width: Utilities.setWidgetWidthByPercentage(context, 40),
-                        height: Utilities.setWidgetHeightByPercentage(context, 5),
+                        width:
+                            Utilities.setWidgetWidthByPercentage(context, 40),
+                        height:
+                            Utilities.setWidgetHeightByPercentage(context, 5),
                         child: TextField(
-                          controller: TextEditingController(text: values.start.round().toString()),
+                          controller: TextEditingController(
+                              text: values.start.round().toString()),
                           onSubmitted: (value) {
                             setState(() {
                               double newStartValue = double.parse(value);
@@ -119,14 +134,23 @@ class _FilterPageState extends State<FilterPage> {
                     children: [
                       Container(
                         alignment: Alignment.centerLeft,
-                        width: Utilities.setWidgetWidthByPercentage(context, 40),
-                        child: const Text("до", style: TextStyle(color: Color.fromRGBO(138, 138, 142, 1), fontSize: 14),),
+                        width:
+                            Utilities.setWidgetWidthByPercentage(context, 40),
+                        child: const Text(
+                          "до",
+                          style: TextStyle(
+                              color: Color.fromRGBO(138, 138, 142, 1),
+                              fontSize: 14),
+                        ),
                       ),
                       SizedBox(
-                        width: Utilities.setWidgetWidthByPercentage(context, 40),
-                        height: Utilities.setWidgetHeightByPercentage(context, 5),
+                        width:
+                            Utilities.setWidgetWidthByPercentage(context, 40),
+                        height:
+                            Utilities.setWidgetHeightByPercentage(context, 5),
                         child: TextField(
-                          controller: TextEditingController(text: values.end.round().toString()),
+                          controller: TextEditingController(
+                              text: values.end.round().toString()),
                           onSubmitted: (value) {
                             setState(() {
                               double newEndValue = double.parse(value);
@@ -153,10 +177,11 @@ class _FilterPageState extends State<FilterPage> {
                                 color: Colors.red,
                                 width: 1,
                               ),
-      borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8),
                             ),
+                          ),
                         ),
-                      ),)
+                      )
                     ],
                   ),
                 ],
@@ -166,37 +191,41 @@ class _FilterPageState extends State<FilterPage> {
           Expanded(
             flex: 46,
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: Utilities.setWidgetWidthByPercentage(context, 4.3)),
-              alignment: Alignment.bottomCenter,
-              child: SliderTheme(
-                data: const SliderThemeData(
-                  showValueIndicator: ShowValueIndicator.never, 
-                  trackHeight: 1,
-                  rangeThumbShape: RoundRangeSliderThumbShape(enabledThumbRadius: 5)
-                ),
-                child: RangeSlider(
-                values: rangeSliderValues,
-                min: 10,
-                max: 30000,
-                divisions: 29990,
-                labels: labels,
-                activeColor: const Color.fromRGBO(98, 175, 28, 1),
-                onChanged: (newValue) {
-                  setState(() {
-                    rangeSliderValues = newValue;
-                    values = rangeSliderValues;
-                  });
-                },
-              ),
-              )
-            ),
+                margin: EdgeInsets.symmetric(
+                    horizontal:
+                        Utilities.setWidgetWidthByPercentage(context, 4.3)),
+                alignment: Alignment.bottomCenter,
+                child: SliderTheme(
+                  data: const SliderThemeData(
+                      showValueIndicator: ShowValueIndicator.never,
+                      trackHeight: 1,
+                      rangeThumbShape:
+                          RoundRangeSliderThumbShape(enabledThumbRadius: 5)),
+                  child: RangeSlider(
+                    values: rangeSliderValues,
+                    min: 10,
+                    max: 30000,
+                    divisions: 29990,
+                    labels: labels,
+                    activeColor: const Color.fromRGBO(98, 175, 28, 1),
+                    onChanged: (newValue) {
+                      setState(() {
+                        rangeSliderValues = newValue;
+                        values = rangeSliderValues;
+                      });
+                    },
+                  ),
+                )),
           ),
           Expanded(
             flex: 560,
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                margin: EdgeInsets.symmetric(horizontal: Utilities.setWidgetWidthByPercentage(context, 4.3), vertical: 10),
+                margin: EdgeInsets.symmetric(
+                    horizontal:
+                        Utilities.setWidgetWidthByPercentage(context, 4.3),
+                    vertical: 10),
                 width: Utilities.setWidgetWidthByPercentage(context, 95),
                 height: Utilities.setWidgetHeightByPercentage(context, 5.2),
                 decoration: BoxDecoration(
@@ -208,12 +237,17 @@ class _FilterPageState extends State<FilterPage> {
                   builder: (context, ref, child) {
                     return TextButton(
                       onPressed: () {
-                        ref.read(bottomNavBarVisibilityProvider.notifier).state = true;
+                        ref
+                            .read(bottomNavBarVisibilityProvider.notifier)
+                            .state = true;
                         Navigator.of(context).pop(values);
                       },
                       child: Container(
                         alignment: Alignment.center,
-                      child: const Text("Показать товары", style: TextStyle(color: Colors.white),),
+                        child: const Text(
+                          "Показать товары",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     );
                   },

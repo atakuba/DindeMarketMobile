@@ -1,57 +1,81 @@
+import 'dart:ffi';
+
+import 'package:dinde_market/models/product_photo.dart';
 import 'package:dinde_market/models/sub_category.dart';
 
 class Product {
   final int id;
   final String name;
-  final String picture;
+  // final String picture;
+  final List<ProductPhoto> photos;
   final double price;
   final String description;
-  final SubCategory subCategory;
+  final int subCategoryId;
+  final DateTime releaseDate;
+  // final SubCategory subCategory;
   bool favorite;
-  int count;
-  final int discount;
-  final bool newProduct;
-  final bool seasonal;
+  final int count;
+  final double discount;
+  int amount;
+  // final bool seasonal;
 
   Product({
-    required this.newProduct,
+    // required this.newProduct,
     required this.id,
     required this.name,
-    required this.picture,
+    required this.photos,
     required this.price,
     required this.description,
-    required this.subCategory,
+    required this.subCategoryId,
     this.favorite = false,
-    this.count = 1,
+    required this.count,
     required this.discount,
-    required this.seasonal,
+    this.amount =0,
+    required this.releaseDate,
   });
 
   Product copyWith({
     int? id,
     String? name,
-    String? picture,
+    List<ProductPhoto>? photos,
     double? price,
     String? description,
     SubCategory? subCategory,
     bool? favorite,
     int? count,
-    int? discount,
+    double? discount,
     bool? newProduct,
     bool? seasonal,
+    int? amount,
   }) {
     return Product(
       id: id ?? this.id,
       name: name ?? this.name,
-      picture: picture ?? this.picture,
+      photos: photos ?? this.photos,
       price: price ?? this.price,
       description: description ?? this.description,
-      subCategory: subCategory ?? this.subCategory,
+      subCategoryId: subCategoryId ?? this.subCategoryId,
       favorite: favorite ?? this.favorite,
       count: count ?? this.count,
       discount: discount ?? this.discount,
-      newProduct: newProduct ?? this.newProduct,
-      seasonal: seasonal ?? this.seasonal,
+      amount: amount ?? this.amount,
+      releaseDate: releaseDate ?? this.releaseDate,
+    );
+  }
+
+   factory Product.fromJson(Map<String, dynamic> json) {
+    return Product(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      photos: (json['photos'] as List)
+          .map((photo) => ProductPhoto.fromJson(photo))
+          .toList(),
+      price: json['price'],
+      subCategoryId: json['subcategoryId'],
+      releaseDate: DateTime.parse(json['releaseDate']),
+      count: json['count'],
+      discount: json['discount'],
     );
   }
 }

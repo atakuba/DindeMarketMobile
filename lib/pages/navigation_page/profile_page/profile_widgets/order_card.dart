@@ -547,7 +547,7 @@ Widget orderedProductCard(Product product, BuildContext context) {
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Image(
-              image: AssetImage(product.picture),
+              image: AssetImage(product.photos.first.url),
             )),
         SizedBox(
           child: Column(
@@ -555,7 +555,7 @@ Widget orderedProductCard(Product product, BuildContext context) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Товар: ${product.subCategory.name}",
+                "Товар: ${product.name}",
                 overflow: TextOverflow.fade,
               ),
               Text("Количество: ${product.count}"),

@@ -11,78 +11,79 @@ class NavigationBarPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-  int selectedIndex = ref.watch(selectedIndexProvider);
-  bool bottomNavBarVisible = ref.watch(bottomNavBarVisibilityProvider);
+    int selectedIndex = ref.watch(selectedIndexProvider);
+    bool bottomNavBarVisible = ref.watch(bottomNavBarVisibilityProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey,
       bottomNavigationBar: Visibility(
         visible: bottomNavBarVisible,
         child: BottomNavigationBar(
-        
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {ref.read(selectedIndexProvider.notifier).state = index; },
-        currentIndex: selectedIndex,
-        selectedLabelStyle: const TextStyle(
-            fontSize: 10, color: Color.fromRGBO(138, 138, 142, 1)),
-        unselectedLabelStyle: const TextStyle(fontSize: 10),
-        items: [
-          BottomNavigationBarItem(
-              icon: selectedIndex == 0
-                  ? const Icon(
-                      Icons.home,
-                      color: Color.fromRGBO(98, 175, 28, 1),
-                    )
-                  : const Icon(
-                      Icons.home_outlined,
-                      color: Color.fromRGBO(138, 138, 142, 1),
-                    ),
-              label: 'Главная'),
-          BottomNavigationBarItem(
-              icon: selectedIndex == 1
-                  ? const Icon(
-                      Icons.favorite,
-                      color: Color.fromRGBO(98, 175, 28, 1),
-                    )
-                  : const Icon(
-                      Icons.favorite_border_outlined,
-                      color: Color.fromRGBO(138, 138, 142, 1),
-                    ),
-              label: 'Избранное'),
-          BottomNavigationBarItem(
-              icon: selectedIndex == 2
-                  ? const Icon(
-                      Icons.shopping_cart,
-                      color: Color.fromRGBO(98, 175, 28, 1),
-                    )
-                  : const Icon(
-                      Icons.shopping_cart_outlined,
-                      color: Color.fromRGBO(138, 138, 142, 1),
-                    ),
-              label: 'Корзина'),
-          BottomNavigationBarItem(
-              icon: selectedIndex == 3
-                  ? const Icon(
-                      Icons.person,
-                      color: Color.fromRGBO(98, 175, 28, 1),
-                    )
-                  : const Icon(
-                      Icons.person_outline,
-                      color: Color.fromRGBO(138, 138, 142, 1),
-                    ),
-              label: 'Профиль'),
-        ],
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) {
+            ref.read(selectedIndexProvider.notifier).state = index;
+          },
+          currentIndex: selectedIndex,
+          selectedLabelStyle: const TextStyle(
+              fontSize: 10, color: Color.fromRGBO(138, 138, 142, 1)),
+          unselectedLabelStyle: const TextStyle(fontSize: 10),
+          items: [
+            BottomNavigationBarItem(
+                icon: selectedIndex == 0
+                    ? const Icon(
+                        Icons.home,
+                        color: Color.fromRGBO(98, 175, 28, 1),
+                      )
+                    : const Icon(
+                        Icons.home_outlined,
+                        color: Color.fromRGBO(138, 138, 142, 1),
+                      ),
+                label: 'Главная'),
+            BottomNavigationBarItem(
+                icon: selectedIndex == 1
+                    ? const Icon(
+                        Icons.favorite,
+                        color: Color.fromRGBO(98, 175, 28, 1),
+                      )
+                    : const Icon(
+                        Icons.favorite_border_outlined,
+                        color: Color.fromRGBO(138, 138, 142, 1),
+                      ),
+                label: 'Избранное'),
+            BottomNavigationBarItem(
+                icon: selectedIndex == 2
+                    ? const Icon(
+                        Icons.shopping_cart,
+                        color: Color.fromRGBO(98, 175, 28, 1),
+                      )
+                    : const Icon(
+                        Icons.shopping_cart_outlined,
+                        color: Color.fromRGBO(138, 138, 142, 1),
+                      ),
+                label: 'Корзина'),
+            BottomNavigationBarItem(
+                icon: selectedIndex == 3
+                    ? const Icon(
+                        Icons.person,
+                        color: Color.fromRGBO(98, 175, 28, 1),
+                      )
+                    : const Icon(
+                        Icons.person_outline,
+                        color: Color.fromRGBO(138, 138, 142, 1),
+                      ),
+                label: 'Профиль'),
+          ],
+        ),
       ),
-      ) ,
       body: SafeArea(
         top: false,
         child: IndexedStack(
           index: selectedIndex,
-          children: [
+          children: const [
             HomePage(),
-            const FavoritePage(),
-            const CartPage(),
-            const ProfilePage()
+            FavoritePage(),
+            CartPage(),
+            ProfilePage()
           ],
         ),
       ),

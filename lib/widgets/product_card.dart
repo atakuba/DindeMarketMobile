@@ -1,4 +1,3 @@
-import 'package:dinde_market/provider/products_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,6 +5,7 @@ import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/pages/navigation_page/home_page/product_page.dart';
 import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/provider/favorite_list_provider.dart';
+import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:dinde_market/widgets/count_card.dart';
 
@@ -15,8 +15,13 @@ class ProductCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorite = ref.watch(productListProvider).where((p) => p.id == product.id).first.favorite;
-    final isInCart = ref.watch(cartListNotifierProvider.notifier).notInCart(product);
+    final isFavorite = ref
+        .watch(productListProvider)
+        .where((p) => p.id == product.id)
+        .first
+        .favorite;
+    final isInCart =
+        ref.watch(cartListNotifierProvider.notifier).notInCart(product);
     return Container(
       margin: const EdgeInsets.all(9),
       width: MediaQuery.of(context).size.width / 2,
@@ -40,11 +45,22 @@ class ProductCard extends ConsumerWidget {
             children: [
               SizedBox(
                 child: InkWell(
-                  child: Image(
-                    image: AssetImage(product.picture),
-                    width: Utilities.setWidgetWidthByPercentage(context, 45),
-                    fit: BoxFit.fill,
-                  ),
+                  //product.photos.first.url
+                  child: Image.network(product.photos.first.url,
+                      errorBuilder: (context, error, stackTrace) {
+                    return const Text(
+                      'Ошибка загрузки изображения',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.red,
+                          decoration: TextDecoration.underline,
+                          fontSize: 12),
+                    );
+                  }
+                      // image: AssetImage(),
+                      // width: Utilities.setWidgetWidthByPercentage(context, 45),
+                      // fit: BoxFit.fill,
+                      ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ProductPage(product: product),
@@ -53,39 +69,49 @@ class ProductCard extends ConsumerWidget {
                 ),
               ),
               Positioned(
-      left: 0, 
-      child: Container(
-        alignment: Alignment.centerLeft,
-            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          product.newProduct ? Container(
-            margin: const EdgeInsets.symmetric(vertical: 4),
-        width: Utilities.setWidgetWidthByPercentage(context, 19),
-        height: Utilities.setWidgetHeightByPercentage(context, 3.3),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-        color: const Color.fromRGBO(244, 234, 11, 1),
-        ),
-        alignment: Alignment.center,
-        child: const Text("Новинка"),
-          ): Container(),
-        product.discount != 0 ?  Container(
-        width: Utilities.setWidgetWidthByPercentage(context, 13),
-        height: Utilities.setWidgetHeightByPercentage(context, 3.3),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-        color: Colors.red,
-        ),
-        alignment: Alignment.center,
-        child: Text("-${product.discount}%", style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),),
-      ) : Container()
-        ],
-      ),
-      )
-    ),
+                  left: 0,
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 10),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //   product.newProduct ? Container(
+                        //     margin: const EdgeInsets.symmetric(vertical: 4),
+                        // width: Utilities.setWidgetWidthByPercentage(context, 19),
+                        // height: Utilities.setWidgetHeightByPercentage(context, 3.3),
+                        // decoration: BoxDecoration(
+                        //   borderRadius: BorderRadius.circular(30),
+                        // color: const Color.fromRGBO(244, 234, 11, 1),
+                        // ),
+                        // alignment: Alignment.center,
+                        // child: const Text("Новинка"),
+                        //   ): Container(),
+                        product.discount != 0
+                            ? Container(
+                                width: Utilities.setWidgetWidthByPercentage(
+                                    context, 13),
+                                height: Utilities.setWidgetHeightByPercentage(
+                                    context, 3.3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color: Colors.red,
+                                ),
+                                alignment: Alignment.center,
+                                child: Text(
+                                  "-${product.discount}%",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              )
+                            : Container()
+                      ],
+                    ),
+                  )),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                 height: Utilities.setWidgetHeightByPercentage(context, 3.94),
@@ -97,11 +123,15 @@ class ProductCard extends ConsumerWidget {
                 ),
                 child: InkWell(
                   child: Icon(
-                    isFavorite ? Icons.favorite : Icons.favorite_border_outlined,
+                    isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border_outlined,
                     color: Colors.red,
                   ),
                   onTap: () {
-                    ref.read(favoriteListNotifierProvider.notifier).toggleFavorite(product);
+                    ref
+                        .read(favoriteListNotifierProvider.notifier)
+                        .toggleFavorite(product);
                   },
                 ),
               ),
@@ -133,31 +163,37 @@ class ProductCard extends ConsumerWidget {
             ),
           ),
           Container(
-            alignment: Alignment.center,
-            height: Utilities.setWidgetHeightByPercentage(context, 4.1),
-            width: Utilities.setWidgetWidthByPercentage(context, 39.2),
-            decoration: BoxDecoration(
-              color: const Color.fromRGBO(98, 175, 28, 1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: isInCart ? SizedBox(
-              height: Utilities.setWidgetHeightByPercentage(context, 3.9),
+              alignment: Alignment.center,
+              height: Utilities.setWidgetHeightByPercentage(context, 4.1),
               width: Utilities.setWidgetWidthByPercentage(context, 39.2),
-              child: TextButton(
-                child: const Text(
-                  "В корзину",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600),
-                ),
-                onPressed: () {
-                  ref.read(cartListNotifierProvider.notifier).countIncrement(product);
-                },
-                
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(98, 175, 28, 1),
+                borderRadius: BorderRadius.circular(20),
               ),
-            ) : CountCard(ref: ref, product: product,)
-          ),
+              child: isInCart
+                  ? SizedBox(
+                      height:
+                          Utilities.setWidgetHeightByPercentage(context, 3.9),
+                      width:
+                          Utilities.setWidgetWidthByPercentage(context, 39.2),
+                      child: TextButton(
+                        child: const Text(
+                          "В корзину",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        onPressed: () {
+                          ref
+                              .read(cartListNotifierProvider.notifier)
+                              .amountIncrement(product);
+                        },
+                      ),
+                    )
+                  : CountCard(
+                      product: product,
+                    )),
         ],
       ),
     );

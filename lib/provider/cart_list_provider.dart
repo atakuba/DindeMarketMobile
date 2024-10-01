@@ -7,7 +7,7 @@ final cartListNotifierProvider =
     StateNotifierProvider<CartListNotifier, List<Product>>((ref) {
   final productList = ref.watch(productListProvider);
   final cartProductList =
-      productList.where((product) => product.count > 0).toList();
+      productList.where((product) => product.amount > 0).toList();
   return CartListNotifier(cartProductList, ref);
 });
 
@@ -16,20 +16,20 @@ class CartListNotifier extends StateNotifier<List<Product>> {
 
   CartListNotifier(super.initialFavorites, this.ref) {
     ref.listen<List<Product>>(productListProvider, (_, productList) {
-      state = productList.where((product) => product.count > 0).toList();
+      state = productList.where((product) => product.amount > 0).toList();
     });
   }
-  void countIncrement(Product product) {
+  void amountIncrement(Product product) {
     if (!state.contains(product)) {
       state.add(product);
     }
     final productListNotifier = ref.read(productListProvider.notifier);
     final productList = productListNotifier.state;
 
-    // Update the count of the specified product
+    // Update the amount of the specified product
     final updatedProductList = productList.map((p) {
       if (p.id == product.id) {
-        return p.copyWith(count: p.count + 1);
+        return p.copyWith(amount: p.amount + 1);
       }
       return p;
     }).toList();
@@ -38,38 +38,38 @@ class CartListNotifier extends StateNotifier<List<Product>> {
     productListNotifier.state = updatedProductList;
   }
 
-  int getTotalProductCount() {
-    return state.fold(0, (total, p) => total + p.count);
+  int getTotalProductAmount() {
+    return state.fold(0, (total, p) => total + p.amount);
   }
 
   int getTotalProductPrice() {
-    return state.fold(0, (total, p) => total + (p.price.round() * p.count));
+    return state.fold(0, (total, p) => total + (p.price.round() * p.amount));
   }
 
   int getTotalDiscount() {
-    return state.where((p) => p.discount != 0).fold(0, (total, p) => total + ((p.price * (p.discount/100)).round()*p.count));
+    return state.where((p) => p.discount != 0).fold(0, (total, p) => total + ((p.price * (p.discount/100)).round()*p.amount));
   }
 
   int getTotalDiscountPrice() {
     return getTotalProductPrice() - getTotalDiscount();
   }
 
-  void countDecrement(Product product, int count) {
-    product.count = count;
-    if (product.count != 0) {
+  void amountDecrement(Product product, int amount) {
+    product.amount = amount;
+    if (product.amount != 0) {
       final productListNotifier = ref.watch(productListProvider.notifier);
       final productList = productListNotifier.state;
 
-      // Update the count of the specified product
+      // Update the amount of the specified product
       final updatedProductList = productList.map((p) {
         if (p.id == product.id) {
-          return p.copyWith(count: p.count - 1);
+          return p.copyWith(amount: p.amount - 1);
         }
         return p;
       }).toList();
 
       // Update the product list provider
-      if (product.count < 1) {
+      if (product.amount < 1) {
         state.remove(product);
       }
       productListNotifier.state = updatedProductList;
@@ -80,10 +80,10 @@ class CartListNotifier extends StateNotifier<List<Product>> {
     final productListNotifier = ref.read(productListProvider.notifier);
       final productList = productListNotifier.state;
 
-      // Update the count of the specified product
+      // Update the amount of the specified product
       final updatedProductList = productList.map((p) {
         if (p.id == product.id) {
-          return p.copyWith(count: 0);
+          return p.copyWith(amount: 0);
         }
         return p;
       }).toList();
@@ -96,7 +96,7 @@ void removeAllProductsFromCart(List<Product> productListInCart) {
   final productListNotifier = ref.read(productListProvider.notifier);
 
   final productList = productListNotifier.state;
-  final updatedProductList = productList.map((p) => p.copyWith(count: 0)).toList();
+  final updatedProductList = productList.map((p) => p.copyWith(amount: 0)).toList();
   
   productListNotifier.state = updatedProductList;
 
@@ -109,18 +109,18 @@ void removeAllProductsFromCart(List<Product> productListInCart) {
 }
 
 
-  int productFinalCount(Product prod) {
+  int productFinalAmount(Product prod) {
     return ref
         .watch(productListProvider)
         .firstWhere((p) => p.id == prod.id)
-        .count;
+        .amount;
   }
 
   bool notInCart(Product prod) {
     return ref
             .watch(productListProvider)
             .firstWhere((p) => p.id == prod.id)
-            .count <
+            .amount <
         1;
   }
 
@@ -131,7 +131,7 @@ void removeAllProductsFromCart(List<Product> productListInCart) {
     // Update the favorite status of the product in the product list
     final updatedProductList = productList.map((p) {
       if (p.id == product.id) {
-        return p.copyWith(count: product.count);
+        return p.copyWith(amount: product.amount);
       }
       return p;
     }).toList();
