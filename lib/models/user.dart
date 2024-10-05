@@ -7,9 +7,9 @@ class User {
   final String username;
   final String firstName;
   final String lastName;
-  final String phoneNumber;
+  final String? phoneNumber;
   final District region;
-  final String address;
+  final String? address;
   final String? token;
   User({
     required this.id,
@@ -59,5 +59,31 @@ class User {
   // Convert a JSON string back to User
   factory User.fromJsonString(String jsonString) {
     return User.fromJson(jsonDecode(jsonString));
+  }
+
+  factory User.fromMap(Map<String, dynamic> map) {
+    return User(
+      id: map['id'],
+      username: map['username'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
+      phoneNumber: map['phoneNumber'],
+      region: map['region'],
+      address: map['address'],
+      token: map['token'], // token can be null
+    );
+  }
+  
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'username': username,
+      'firstName': firstName,
+      'lastName': lastName,
+      'phoneNumber': phoneNumber,
+      'region': region,
+      'address': address,
+      'token': token, // token is optional
+    };
   }
 }

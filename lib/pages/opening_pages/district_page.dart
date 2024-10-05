@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:dinde_market/config/database_configuration.dart';
 import 'package:dinde_market/main.dart';
 import 'package:dinde_market/models/district.dart';
+import 'package:dinde_market/models/user.dart';
 import 'package:dinde_market/pages/opening_pages/district_modal_widget.dart';
 import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
@@ -49,16 +51,35 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
     }
   }
 
-  Future<void> postRegionsID(int regionID) async {
+  void addUserToDb(User user) async {
+  DatabaseHelper dbHelper = DatabaseHelper.instance;
+  
+await dbHelper.insertUser(user.toMap());
+  // int deletedCount = await dbHelper.deleteProductFavorite(productId);
+  print("******************************");
+  print("******************************");
+  print("******************************");
+  print("******************************");
+  // print('Deleted $deletedCount product(s) from favorites');
+}
+
+  Future<void> postRegionsID(District region) async {
     final url = Uri.parse("$urlPrefix/api/clients");
     final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({"regionId": regionID});
+    final body = jsonEncode({"regionId": region.id});
 
     try {
       final response = await http.post(url, headers: headers, body: body);
       if (response.statusCode == 200) {
         var decodeFormat = utf8.decode(response.bodyBytes);
         final data = jsonDecode(decodeFormat);
+        addUserToDb(User(id: data['id'], 
+        firstName: data['firstName'], 
+        lastName: data['lastName'], 
+        phoneNumber: data['phoneNumber'], 
+        region: region, 
+        address: data['address'], 
+        username: data['username']));
         secureStorage.write(key: "auth_token", value: data['token']);
       } else {
         print('Failed to post data');
@@ -135,8 +156,7 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
                   onPressed: () {
                     if (selectedDistrict.isNotEmpty) {
                       postRegionsID(districtList
-                          .firstWhere((d) => d.name == selectedDistrict)
-                          .id);
+                          .firstWhere((d) => d.name == selectedDistrict));
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const MyApp()));
                     }

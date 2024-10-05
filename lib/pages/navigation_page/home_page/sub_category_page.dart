@@ -76,6 +76,7 @@ class SubCategoryPage extends StatelessWidget {
                             ),
                             itemBuilder: (context, index) {
                               final subCategory = subcategoryList[index];
+                              // final productList = ref.watch(productListProvider.notifier).state.where((p) => p.subCategoryId == subCategory.id).toList();
                               if (subcategoryList.isNotEmpty) {
                                 return InkWell(
                                   child: Container(

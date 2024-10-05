@@ -1,6 +1,8 @@
+import 'package:dinde_market/config/database_configuration.dart';
 import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/provider/products_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 // StateNotifierProvider for the list of favorite products
 final cartListNotifierProvider =
@@ -20,9 +22,9 @@ class CartListNotifier extends StateNotifier<List<Product>> {
     });
   }
   void amountIncrement(Product product) {
-    if (!state.contains(product)) {
-      state.add(product);
-    }
+    // List<int> productIdList = ref.watch(productListProvider.notifier).state.map((p) => p.id).toList();
+    
+    
     final productListNotifier = ref.read(productListProvider.notifier);
     final productList = productListNotifier.state;
 
@@ -34,9 +36,27 @@ class CartListNotifier extends StateNotifier<List<Product>> {
       return p;
     }).toList();
 
+    List<int> productIdList = state.map((p) => p.id).toList();
+    if (!productIdList.contains(product.id)) {
+      print("%%%%%%%%%%%%%%%%");
+      print("%%%%%%%%%%%%%%%%");
+      print("%%%%%%%%%%%%%%%%");
+      product.amount++;
+      print("product amount ${product.amount}");
+      state.add(product);
+      addToDbCart(product.id, product.amount);
+    }else {
+      product.amount++;
+      updateCartDb(product.id, product.amount);
+    }
+
     // Update the product list provider
     productListNotifier.state = updatedProductList;
   }
+
+  // List<int> getProductIdList() {
+  //   return 
+  // }
 
   int getTotalProductAmount() {
     return state.fold(0, (total, p) => total + p.amount);
@@ -55,7 +75,7 @@ class CartListNotifier extends StateNotifier<List<Product>> {
   }
 
   void amountDecrement(Product product, int amount) {
-    product.amount = amount;
+    // product.amount = amount;
     if (product.amount != 0) {
       final productListNotifier = ref.watch(productListProvider.notifier);
       final productList = productListNotifier.state;
@@ -67,9 +87,21 @@ class CartListNotifier extends StateNotifier<List<Product>> {
         }
         return p;
       }).toList();
+      amount -= 1;
+
+        
+    print("@@@@@@@@@@@@@");
+    print("@@@@@@@@@@@@@");
+    print("@@@@@@@@@@@@@");
+    print("product amount $amount");
+List<int> productIdList = state.map((p) => p.id).toList();
+    if (productIdList.contains(product.id)) {
+      updateCartDb(product.id, amount);
+    }
 
       // Update the product list provider
-      if (product.amount < 1) {
+      if (amount < 1) {
+        removeFromDbCart(product.id);
         state.remove(product);
       }
       productListNotifier.state = updatedProductList;
@@ -87,6 +119,7 @@ class CartListNotifier extends StateNotifier<List<Product>> {
         }
         return p;
       }).toList();
+      removeFromDbCart(product.id);
 
       state.remove(product);
       productListNotifier.state = updatedProductList;
@@ -99,12 +132,13 @@ void removeAllProductsFromCart(List<Product> productListInCart) {
   final updatedProductList = productList.map((p) => p.copyWith(amount: 0)).toList();
   
   productListNotifier.state = updatedProductList;
+removeAllFromDbCart();
+  // for (Product p in productListInCart) {
+  //   if (!mounted) return; // Check again if the widget is still mounted
+  //   state.remove(p);
+  // }
 
-  for (Product p in productListInCart) {
-    if (!mounted) return; // Check again if the widget is still mounted
-    state.remove(p);
-  }
-
+  
   state = updatedProductList.toList();
 }
 
@@ -142,4 +176,54 @@ void removeAllProductsFromCart(List<Product> productListInCart) {
     // Update the state with the new favorite list
     state = updatedProductList.toList();
   }
+  
+  void addToDbCart(int productId, int amount) async {
+  DatabaseHelper dbHelper = DatabaseHelper.instance;
+  
+  Map<String, dynamic> row = {
+    DatabaseHelper.columnId: productId,
+    DatabaseHelper.columnAmount: amount,
+  };
+
+  int id = await dbHelper.insertProductCart(row);
+  print("###################################");
+  print("###################################");
+  print("###################################");
+  print("###################################");
+  print('Inserted product into cart with id: $id');
+}
+
+  void updateCartDb(int productId, int amount) async {
+  DatabaseHelper dbHelper = DatabaseHelper.instance;
+
+  int id = await dbHelper.updateProductCart(productId, amount);
+  print("###################################");
+  print("###################################");
+  print("###################################");
+  print("new product amount is $amount");
+  print('updated product in cart with id: $id');
+}
+
+void removeFromDbCart(int productId) async {
+  DatabaseHelper dbHelper = DatabaseHelper.instance;
+  
+  int deletedCount = await dbHelper.deleteProductCart(productId);
+  print("******************************");
+  print("******************************");
+  print("******************************");
+  print("******************************");
+  print("deleted with id $productId");
+  print('Deleted $deletedCount product(s) from favorites');
+}
+void removeAllFromDbCart() async {
+  DatabaseHelper dbHelper = DatabaseHelper.instance;
+  
+  int deletedCount = await dbHelper.deleteAllProductCart();
+  print("******************************");
+  print("******************************");
+  print("******************************");
+  print("******************************");
+  print("deleted all product form cart");
+  print('Deleted $deletedCount product(s) from favorites');
+}
 }

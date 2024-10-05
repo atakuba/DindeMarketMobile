@@ -98,7 +98,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                               fontSize: 14,
                               fontWeight: FontWeight.w500),
                         ),
-                        Text(widget.order.customerName,
+                        Text(widget.order.customerFirstName,
                             style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -118,7 +118,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                               fontSize: 14,
                               fontWeight: FontWeight.w500),
                         ),
-                        Text(widget.order.customerName,
+                        Text(widget.order.customerLastName,
                             style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -138,7 +138,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                               fontSize: 14,
                               fontWeight: FontWeight.w500),
                         ),
-                        Text(widget.order.customerName,
+                        Text(widget.order.id.toString(),
                             style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -293,7 +293,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               height: Utilities.setWidgetHeightByPercentage(context, 8),
               child: Text(
-                widget.order.receiptMessage,
+                "Вы можете отследить заказ в личном кабинете.\nЧерез некоторое время с вами свяжутся для уточнения деталей.",
                 overflow: TextOverflow.visible,
                 style: const TextStyle(
                     color: Color.fromRGBO(135, 146, 155, 1),

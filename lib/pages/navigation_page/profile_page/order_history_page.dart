@@ -153,7 +153,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
                               ),
                               onTap: () {
                                 setState(() {
-                                  orderNumber = order.orderNumber;
+                                  orderNumber = order.id;
                                 });
                               },
                             );
@@ -164,7 +164,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage>
                           child: OrderCard(ref
                               .watch(orderProvider.notifier)
                               .state
-                              .firstWhere((o) => o.orderNumber == orderNumber)),
+                              .firstWhere((o) => o.id == orderNumber)),
                         );
                 },
               ))

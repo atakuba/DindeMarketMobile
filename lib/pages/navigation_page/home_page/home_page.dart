@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:dinde_market/models/category.dart';
+import 'package:dinde_market/provider/favorite_list_provider.dart';
 import 'package:dinde_market/provider/token_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:dinde_market/utility/utilities.dart';
@@ -95,9 +96,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                     image: const AssetImage("assets/whats_app_logo.png"),
                     width: Utilities.setWidgetWidthByPercentage(context, 19.7),
                   ),
-                  Image(
+                  InkWell(
+                    child: Image(
                     image: const AssetImage("assets/tiktok_logo.png"),
                     width: Utilities.setWidgetWidthByPercentage(context, 19.7),
+                  ),
+                  onTap: () {
+                  },
                   ),
                   Image(
                     image: const AssetImage("assets/instagram_logo.png"),

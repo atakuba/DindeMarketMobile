@@ -15,6 +15,7 @@ class ProductCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final updatedProductd = ref.watch(productListProvider).firstWhere((p) => p.id == product.id);
     final isFavorite = ref
         .watch(productListProvider)
         .where((p) => p.id == product.id)
@@ -45,8 +46,7 @@ class ProductCard extends ConsumerWidget {
             children: [
               SizedBox(
                 child: InkWell(
-                  //product.photos.first.url
-                  child: Image.network(product.photos.first.url,
+                  child: Image.network(updatedProductd.photos.first.url,
                       errorBuilder: (context, error, stackTrace) {
                     return const Text(
                       'Ошибка загрузки изображения',
@@ -57,9 +57,6 @@ class ProductCard extends ConsumerWidget {
                           fontSize: 12),
                     );
                   }
-                      // image: AssetImage(),
-                      // width: Utilities.setWidgetWidthByPercentage(context, 45),
-                      // fit: BoxFit.fill,
                       ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -78,17 +75,6 @@ class ProductCard extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        //   product.newProduct ? Container(
-                        //     margin: const EdgeInsets.symmetric(vertical: 4),
-                        // width: Utilities.setWidgetWidthByPercentage(context, 19),
-                        // height: Utilities.setWidgetHeightByPercentage(context, 3.3),
-                        // decoration: BoxDecoration(
-                        //   borderRadius: BorderRadius.circular(30),
-                        // color: const Color.fromRGBO(244, 234, 11, 1),
-                        // ),
-                        // alignment: Alignment.center,
-                        // child: const Text("Новинка"),
-                        //   ): Container(),
                         product.discount != 0
                             ? Container(
                                 width: Utilities.setWidgetWidthByPercentage(
@@ -131,7 +117,7 @@ class ProductCard extends ConsumerWidget {
                   onTap: () {
                     ref
                         .read(favoriteListNotifierProvider.notifier)
-                        .toggleFavorite(product);
+                        .toggleFavorite(updatedProductd);
                   },
                 ),
               ),

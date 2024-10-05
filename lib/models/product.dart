@@ -1,26 +1,20 @@
-import 'dart:ffi';
-
 import 'package:dinde_market/models/product_photo.dart';
 import 'package:dinde_market/models/sub_category.dart';
 
 class Product {
   final int id;
   final String name;
-  // final String picture;
   final List<ProductPhoto> photos;
   final double price;
   final String description;
   final int subCategoryId;
   final DateTime releaseDate;
-  // final SubCategory subCategory;
   bool favorite;
   final int count;
   final double discount;
   int amount;
-  // final bool seasonal;
 
   Product({
-    // required this.newProduct,
     required this.id,
     required this.name,
     required this.photos,
@@ -54,12 +48,12 @@ class Product {
       photos: photos ?? this.photos,
       price: price ?? this.price,
       description: description ?? this.description,
-      subCategoryId: subCategoryId ?? this.subCategoryId,
+      subCategoryId: subCategoryId,
       favorite: favorite ?? this.favorite,
       count: count ?? this.count,
       discount: discount ?? this.discount,
       amount: amount ?? this.amount,
-      releaseDate: releaseDate ?? this.releaseDate,
+      releaseDate: releaseDate,
     );
   }
 
