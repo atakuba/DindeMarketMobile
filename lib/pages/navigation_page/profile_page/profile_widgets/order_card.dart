@@ -72,7 +72,7 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                         ),
                         alignment: Alignment.center,
                         child: Text(
-                          "№${widget.order.orderNumber}",
+                          "№${widget.order.id}",
                           style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600),
                         ),
@@ -376,9 +376,9 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                     children: [
                       Container(
                         padding: const EdgeInsets.only(top: 10),
-                        child: Text(
-                          widget.order.marketName,
-                          style: const TextStyle(
+                        child: const Text(
+                          'DindeMarket',
+                          style: TextStyle(
                               color: Color.fromRGBO(166, 166, 166, 1),
                               fontSize: 14,
                               fontWeight: FontWeight.w500),
@@ -388,7 +388,7 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.order.customerName,
+                            widget.order.customerFirstName,
                             style: const TextStyle(
                                 color: Color.fromRGBO(166, 166, 166, 1),
                                 fontSize: 14,

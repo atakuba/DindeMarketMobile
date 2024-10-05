@@ -189,7 +189,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                 height: Utilities.setWidgetHeightByPercentage(
                                     context, 4.2),
                                 child: Text(
-                                  user.phoneNumber,
+                                  user.phoneNumber ?? "",
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),
@@ -210,7 +210,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                       isTextField: true,
                                       title: "Номер телефона",
                                       textFieldLabel: "Номер телефона",
-                                      textFieldValue: user.phoneNumber,
+                                      textFieldValue: user.phoneNumber ?? "",
                                       textFieldHint: "+996 ( ___ ) __ __ __",
                                     )));
                         ref

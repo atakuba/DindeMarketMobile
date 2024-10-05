@@ -28,16 +28,14 @@ class TotalPriceWidget {
             .watch(cartListNotifierProvider.notifier)
             .getTotalDiscountPrice();
         Order order = Order(
-            receiptMessage:
-                "Вы можете отследить заказ в личном кабинете.\nЧерез некоторое время с вами свяжутся для уточнения деталей.  ",
-            totalDiscount: 999,
+          deliveryPrice: 200,
+          phoneNumber: "+996222222222",
+           totalDiscount: 999,
             id: 4,
-            orderNumber: 999,
             orderStatus: {OrderStatus.underReview: DateTime.now()},
-            marketName: "Dinde Market",
-            customerName: "Erbol",
+            customerFirstName: "Erbol",
+            customerLastName: "Kira",
             customerAddress: CustomerAddress(
-                id: 4,
                 city: "Karakol",
                 street: "kokulov",
                 customerCommments: "Leave at my porch"),
@@ -60,7 +58,7 @@ class TotalPriceWidget {
                   subCategoryId: 1)
             ],
             totalOrderPrice: 6000,
-            orderDate: DateTime.now());
+            );
         return Container(
           width: double.infinity,
           decoration: const BoxDecoration(
