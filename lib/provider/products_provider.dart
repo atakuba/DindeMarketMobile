@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dinde_market/models/product.dart';
 
 // StateProvider to manage the list of products
-final productListProvider = StateProvider<List<Product>>((ref) => []);
+var productListProvider = StateProvider<List<Product>>((ref) => []);
 
 // Method to update a product in the list
 void updateProduct(WidgetRef ref, Product updatedProduct) {

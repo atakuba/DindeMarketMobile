@@ -7,7 +7,7 @@ void addDistricts(WidgetRef ref, List<District> newDistricts) {
   final currentDistricts = ref.read(districtProvider.notifier).state;
   ref.read(districtProvider.notifier).state = [...currentDistricts, ...newDistricts];
 }
-District getDistrictById(WidgetRef ref, int id) {
+int getDistrictById(WidgetRef ref, int id) {
   final districts = ref.read(districtProvider.notifier).state; // Read the current state of districts
-  return districts.firstWhere((district) => district.id == id);
+  return districts.firstWhere((district) => district.id == id).id;
 }

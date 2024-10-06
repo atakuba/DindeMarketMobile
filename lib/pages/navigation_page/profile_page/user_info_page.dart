@@ -1,4 +1,6 @@
+import 'package:dinde_market/models/district.dart';
 import 'package:dinde_market/pages/navigation_page/profile_page/profile_widgets/edit_user_page.dart';
+import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/provider/user_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
 import 'package:flutter/material.dart';
@@ -249,7 +251,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                 height: Utilities.setWidgetHeightByPercentage(
                                     context, 4.2),
                                 child: Text(
-                                  user.region.name,
+                                  user.region?.name??"",
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),
@@ -264,16 +266,22 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         ],
                       ),
                       onTap: () async {
-                        final newRegion =
+                        String newRegion =
                             await Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => EditUserPage(
                                       isTextField: false,
                                       title: "Регион",
                                       textFieldLabel: "Ваш Регион",
-                                      textFieldValue: user.region.name,
+                                      textFieldValue: user.region?.name ?? "",
                                       textFieldHint: "Введите Ваш Регион",
                                     )));
-                        ref.read(userProvider.notifier).updateRegion(newRegion);
+                                    District district = ref.read(districtProvider.notifier).state.firstWhere((d) => d.name == newRegion);
+                                    print("********");
+                                    print("********");
+                                    print("********");
+                                    print(district.name);
+                        ref.read(userProvider.notifier).updateDistrict(newRegion);
+                        ref.read(userProvider.notifier).updateRegion(district);
                         setState(() {});
                       },
                     ),

@@ -34,6 +34,10 @@ class UserNotifier extends StateNotifier<User> {
     state = state.copyWith(region: newRegion);
   }
 
+  void updateDistrict(String newDistrict) {
+    state = state.copyWith(district: newDistrict);
+  }
+
   void updateUsername(String newUsername) {
     state = state.copyWith(username: newUsername);
   }

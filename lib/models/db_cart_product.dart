@@ -7,7 +7,7 @@ class DbCartProduct {
   factory DbCartProduct.fromCartMap(Map<String, dynamic> map) {
     return DbCartProduct(
       id: map['id'],
-      amount: map['amount'] = 0,
+      amount: map['amount'] ?? 0,  // Use '??' to set 0 if 'amount' is null
     );
   }
 }
