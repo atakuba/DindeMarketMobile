@@ -43,6 +43,7 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
         addDistrictsToDb(districtList);
         selectedDistrict = districtList.first.name;
         print("checkcheck");
+        ref.read(districtProvider.notifier).state = districtList;
         setState(() {});
       } else {
         print('Error: Decoded data is not a list');
