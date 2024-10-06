@@ -179,22 +179,14 @@ class DatabaseHelper {
     return await db.delete(tableUser, where: '$columnId = ?', whereArgs: [id]);
   }
 
-  // Get a user by ID
-Future<Map<String, dynamic>?> getUserById(int id) async {
+  Future<int> updateUser(int id, Map<String, dynamic> row) async {
   Database db = await instance.database;
-  
-  // Query the user table for the user with the specified ID
-  List<Map<String, dynamic>> result = await db.query(
+  return await db.update(
     tableUser,
+    row,
     where: '$columnId = ?',
     whereArgs: [id],
   );
-  
-  // Check if a user was found and return the first user or null
-  if (result.isNotEmpty) {
-    return result.first; // Return the first user found
-  }
-  return null; // Return null if no user found
 }
 
   Future<int> insertDistrict(Map<String, dynamic> row) async {

@@ -113,7 +113,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         return 'Пожалуйста, введите имя'; // Validation message
                                       } else if (value.length < 2) {
                                         return 'Имя должно содержать не менее 2 символов';
-                                      } else if (!RegExp(r'^[a-zA-Z]+$')
+                                      } else if (!RegExp(r'^[a-zA-Zа-яА-Я]+$')
                                           .hasMatch(value)) {
                                         return 'Имя должно содержать только буквы';
                                       }
@@ -160,7 +160,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         return 'Пожалуйста, введите фамилию'; // Validation message
                                       } else if (value.length < 2) {
                                         return 'Фамилия должна содержать не менее 2 символов';
-                                      } else if (!RegExp(r'^[a-zA-Z]+$')
+                                      } else if (!RegExp(r'^[a-zA-Zа-яА-Я]+$')
                                           .hasMatch(value)) {
                                         return 'Фамилия должна содержать только буквы';
                                       }
@@ -306,7 +306,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         return 'Пожалуйста, введите название улицы';
                                       } else if (value.length < 3) {
                                         return 'Название улицы должно содержать не менее 3 символов';
-                                      } else if (!RegExp(r'^[a-zA-Z0-9\s]+$')
+                                      } else if (!RegExp(r'^[a-zA-Zа-яА-Я]+$')
                                           .hasMatch(value)) {
                                         return 'Название улицы должно содержать только буквы, цифры и пробелы';
                                       }

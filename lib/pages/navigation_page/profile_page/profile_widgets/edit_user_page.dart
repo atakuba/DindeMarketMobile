@@ -150,38 +150,35 @@ class _EditUserPageState extends State<EditUserPage> {
                                   hintText: widget.textFieldHint,
                                 ),
                                 validator: (value) {
-                                  if (widget.isTextField) {
-                                    if (widget.title == "Имя") {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Пожалуйста, введите имя';
-                                      } else if (value.length < 2) {
-                                        return 'Имя должно содержать не менее 2 символов';
-                                      } else if (!RegExp(r'^[a-zA-Z]+$')
-                                          .hasMatch(value)) {
-                                        return 'Имя должно содержать только буквы';
-                                      }
-                                    } else if (widget.title == "Фамилия") {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Пожалуйста, введите фамилию';
-                                      } else if (value.length < 2) {
-                                        return 'Фамилия должна содержать не менее 2 символов';
-                                      } else if (!RegExp(r'^[a-zA-Z]+$')
-                                          .hasMatch(value)) {
-                                        return 'Фамилия должна содержать только буквы';
-                                      }
-                                    } else if (widget.title ==
-                                        "Номер телефона") {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Пожалуйста, введите номер телефона';
-                                      } else if (!RegExp(
-                                              r'^\+996 \(\d{3}\) \d{2} \d{2} \d{2}$')
-                                          .hasMatch(value)) {
-                                        return 'Формат номера телефона: +996 (XXX) XX XX XX';
-                                      }
-                                    }
-                                  }
-                                  return null;
-                                },
+  if (widget.isTextField) {
+    if (widget.title == "Имя") {
+      if (value == null || value.isEmpty) {
+        return 'Пожалуйста, введите имя';
+      } else if (value.length < 2) {
+        return 'Имя должно содержать не менее 2 символов';
+      } else if (!RegExp(r'^[a-zA-Zа-яА-ЯёЁ]+$').hasMatch(value)) {
+        return 'Имя должно содержать только буквы';
+      }
+    } else if (widget.title == "Фамилия") {
+      if (value == null || value.isEmpty) {
+        return 'Пожалуйста, введите фамилию';
+      } else if (value.length < 2) {
+        return 'Фамилия должна содержать не менее 2 символов';
+      } else if (!RegExp(r'^[a-zA-Zа-яА-ЯёЁ]+$').hasMatch(value)) {
+        return 'Фамилия должна содержать только буквы';
+      }
+    } else if (widget.title == "Номер телефона") {
+      if (value == null || value.isEmpty) {
+        return 'Пожалуйста, введите номер телефона';
+      } else if (!RegExp(r'^\+996 \(\d{3}\) \d{2} \d{2} \d{2}$')
+          .hasMatch(value)) {
+        return 'Формат номера телефона: +996 (XXX) XX XX XX';
+      }
+    }
+  }
+  return null;
+},
+
                                 maxLines: 1,
                               ),
                             )

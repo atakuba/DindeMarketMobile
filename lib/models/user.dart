@@ -87,7 +87,6 @@ class User {
       'phoneNumber': phoneNumber,
       'district': district,
       'address': address,
-      // 'token': token, // token is optional
     };
   }
 }

@@ -37,7 +37,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                     children: [
                       Container(
                         height:
-                            Utilities.setWidgetHeightByPercentage(context, 20),
+                            Utilities.setWidgetHeightByPercentage(context, 16),
                         alignment: Alignment.center,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -325,7 +325,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
             ),
             GestureDetector(
               child: Container(
-                margin: const EdgeInsets.only(top: 15),
+                margin: const EdgeInsets.only(top: 15, bottom: 20),
                 width: Utilities.setWidgetWidthByPercentage(context, 90),
                 height: Utilities.setWidgetHeightByPercentage(context, 5),
                 alignment: Alignment.center,
