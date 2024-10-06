@@ -42,7 +42,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
         TextEditingController(text: ref.read(userProvider).lastName);
     _phoneNumberController =
         TextEditingController(text: ref.read(userProvider).phoneNumber);
-    selectedDistrict = ref.read(userProvider).region.name;
+    selectedDistrict = ref.read(userProvider).region!.name;
   }
 
   void _validateForm() {

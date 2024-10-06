@@ -1,3 +1,4 @@
+import 'package:dinde_market/models/district.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -9,6 +10,7 @@ class DatabaseHelper {
   static final tableProductCart = 'productCart';
   static final tableProductFavorite = 'productFavorite';
   static final tableUser = 'user';
+  static final tableDistrict = 'district'; 
 
   // Columns for product
   static final columnId = 'id';
@@ -20,9 +22,13 @@ class DatabaseHelper {
   static final columnFirstName = 'firstName';
   static final columnLastName = 'lastName';
   static final columnPhoneNumber = 'phoneNumber';
-  static final columnRegion = 'region';
+  static final columnDistrict = 'district';
   static final columnAddress = 'address';
-  static final columnToken = 'token';
+
+    // Columns for District
+  static final columnDistrictId = 'id'; // Ensure to keep it consistent with your class
+  static final columnDistrictName = 'name';
+  static final columnPriceDelivery = 'priceDelivery';
 
   // Singleton class
   DatabaseHelper._privateConstructor();
@@ -60,14 +66,22 @@ class DatabaseHelper {
 
     await db.execute('''
       CREATE TABLE $tableUser (
-        $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+        $columnId INTEGER PRIMARY KEY,
         $columnUsername TEXT NOT NULL,
         $columnFirstName TEXT NOT NULL,
         $columnLastName TEXT NOT NULL,
         $columnPhoneNumber TEXT NOT NULL,
-        $columnRegion TEXT NOT NULL,
-        $columnAddress TEXT,
-        $columnToken TEXT
+        $columnDistrict TEXT NOT NULL,
+        $columnAddress TEXT
+      );
+    ''');
+
+    // Create District table
+    await db.execute(''' 
+      CREATE TABLE $tableDistrict (
+        $columnId INTEGER PRIMARY KEY,
+        $columnDistrictName TEXT NOT NULL,
+        $columnPriceDelivery REAL NOT NULL
       );
     ''');
   }
@@ -77,6 +91,7 @@ class DatabaseHelper {
     await db.execute('DROP TABLE IF EXISTS $tableProductCart;');
     await db.execute('DROP TABLE IF EXISTS $tableProductFavorite;');
     await db.execute('DROP TABLE IF EXISTS $tableUser;');
+    await db.execute('DROP TABLE IF EXISTS $tableDistrict;');
   }
 
   // Call this method to drop tables
@@ -162,5 +177,59 @@ class DatabaseHelper {
   Future<int> deleteUser(int id) async {
     Database db = await instance.database;
     return await db.delete(tableUser, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  // Get a user by ID
+Future<Map<String, dynamic>?> getUserById(int id) async {
+  Database db = await instance.database;
+  
+  // Query the user table for the user with the specified ID
+  List<Map<String, dynamic>> result = await db.query(
+    tableUser,
+    where: '$columnId = ?',
+    whereArgs: [id],
+  );
+  
+  // Check if a user was found and return the first user or null
+  if (result.isNotEmpty) {
+    return result.first; // Return the first user found
+  }
+  return null; // Return null if no user found
+}
+
+  Future<int> insertDistrict(Map<String, dynamic> row) async {
+    Database db = await instance.database;
+    return await db.insert(tableDistrict, row);
+  }
+
+  // Query all districts
+  Future<List<Map<String, dynamic>>> queryAllDistricts() async {
+    Database db = await instance.database;
+    return await db.query(tableDistrict);
+  }
+
+  // Delete a district
+  Future<int> deleteDistrict(int id) async {
+    Database db = await instance.database;
+    return await db.delete(tableDistrict, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+   Future<void> insertAllDistrict(List<District> districts) async {
+    Database db = await instance.database;
+
+    // Start a batch operation
+    Batch batch = db.batch();
+
+    // Loop through the districts and add them to the batch
+    for (var district in districts) {
+      batch.insert(tableDistrict, {
+        columnDistrictId: district.id,
+        columnDistrictName: district.name,
+        columnPriceDelivery: district.priceDelivery,
+      });
+    }
+
+    // Commit the batch to perform all insertions
+    await batch.commit(noResult: true); // noResult: true for performance
   }
 }

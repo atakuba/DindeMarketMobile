@@ -39,8 +39,10 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
       var data = json.decode(decodeFormat);
       if (data is List) {
         districtList = data.map((json) => District.fromJson(json)).toList();
-        addDistricts(ref, districtList);
+        
+        addDistrictsToDb(districtList);
         selectedDistrict = districtList.first.name;
+        print("checkcheck");
         setState(() {});
       } else {
         print('Error: Decoded data is not a list');
@@ -51,36 +53,38 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
     }
   }
 
-  void addUserToDb(User user) async {
-  DatabaseHelper dbHelper = DatabaseHelper.instance;
-  
-await dbHelper.insertUser(user.toMap());
-  // int deletedCount = await dbHelper.deleteProductFavorite(productId);
-  print("******************************");
-  print("******************************");
-  print("******************************");
-  print("******************************");
-  // print('Deleted $deletedCount product(s) from favorites');
-}
+  void addDistrictsToDb(List<District> districts) async {
+    DatabaseHelper dbHelper = DatabaseHelper.instance;
+    await dbHelper.insertAllDistrict(districts);
+  }
 
-  Future<void> postRegionsID(District region) async {
+  
+
+  void addUserToDb(User user) async {
+    DatabaseHelper dbHelper = DatabaseHelper.instance;
+    await dbHelper.insertUser(user.toMap());
+  }
+
+  Future<void> postRegionsID(String region) async {
+    int regionId = ref.read(districtProvider.notifier).state.firstWhere((d) => d.name == region).id;
     final url = Uri.parse("$urlPrefix/api/clients");
     final headers = {'Content-Type': 'application/json'};
-    final body = jsonEncode({"regionId": region.id});
-
+    final body = jsonEncode({"regionId": regionId});
     try {
       final response = await http.post(url, headers: headers, body: body);
       if (response.statusCode == 200) {
         var decodeFormat = utf8.decode(response.bodyBytes);
         final data = jsonDecode(decodeFormat);
-        addUserToDb(User(id: data['id'], 
-        firstName: data['firstName'], 
-        lastName: data['lastName'], 
-        phoneNumber: data['phoneNumber'], 
-        region: region, 
-        address: data['address'], 
-        username: data['username']));
         secureStorage.write(key: "auth_token", value: data['token']);
+        User user = User(
+            id: data['id'],
+            firstName: data['firstName'],
+            lastName: data['lastName'],
+            phoneNumber: data['phoneNumber'] ?? "+996 (000) 00 00 00",
+            address: data['address'] ?? "Не указано",
+            district: region,
+            username: data['username']);
+        addUserToDb(user);
       } else {
         print('Failed to post data');
       }
@@ -153,10 +157,9 @@ await dbHelper.insertUser(user.toMap());
                 width: Utilities.setWidgetWidthByPercentage(context, 91.5),
                 height: Utilities.setWidgetHeightByPercentage(context, 4.7),
                 child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (selectedDistrict.isNotEmpty) {
-                      postRegionsID(districtList
-                          .firstWhere((d) => d.name == selectedDistrict));
+                      await postRegionsID(selectedDistrict);
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const MyApp()));
                     }

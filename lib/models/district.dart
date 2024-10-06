@@ -16,4 +16,21 @@ class District {
       priceDelivery: json['priceDelivery'].toDouble(), // Ensure it's a double
     );
   }
+
+   factory District.fromMap(Map<String, dynamic> map) {
+    return District(
+      id: map['id'],
+      name: map['name'],
+      priceDelivery: map['priceDelivery'].toDouble(), // Ensure it's a double
+    );
+  }
+
+  // Convert a District object to a Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'priceDelivery': priceDelivery,
+    };
+  }
 }

@@ -44,7 +44,7 @@ class _EditUserPageState extends State<EditUserPage> {
               ref.read(districtProvider.notifier).state.toList();
 
           if (selectedDistrict == "") {
-            selectedDistrict = ref.read(userProvider).region.name;
+            selectedDistrict = ref.read(userProvider).region?.name ?? "";
           }
 
           return Container(

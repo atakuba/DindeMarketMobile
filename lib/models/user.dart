@@ -8,7 +8,8 @@ class User {
   final String firstName;
   final String lastName;
   final String? phoneNumber;
-  final District region;
+  final District? region;
+  final String? district;
   final String? address;
   final String? token;
   User({
@@ -16,10 +17,11 @@ class User {
     required this.firstName,
     required this.lastName,
     required this.phoneNumber,
-    required this.region,
+    this.region,
     required this.address,
     required this.username,
-    this.token
+    this.token,
+    this.district,
   });
 
   // The copyWith method to update specific fields
@@ -30,7 +32,8 @@ class User {
     String? phoneNumber,
     District? region,
     String? username,
-    String? addresss
+    String? addresss,
+    String? district,
   }) {
     return User(
       id: id ?? this.id,
@@ -40,6 +43,7 @@ class User {
       region: region ?? this.region,
       username: username ?? this.username,
       address: addresss ?? this.address,
+      district: district ?? this.district,
     );
   }
 
@@ -51,6 +55,7 @@ class User {
       lastName: json['lastName'],
       phoneNumber: json['phoneNumber'],
       region: json['region'],
+      district: json['district'],
       address: json['address'],
       token: json['token']
     );
@@ -68,9 +73,8 @@ class User {
       firstName: map['firstName'],
       lastName: map['lastName'],
       phoneNumber: map['phoneNumber'],
-      region: map['region'],
+      district: map['district'],
       address: map['address'],
-      token: map['token'], // token can be null
     );
   }
   
@@ -81,9 +85,9 @@ class User {
       'firstName': firstName,
       'lastName': lastName,
       'phoneNumber': phoneNumber,
-      'region': region,
+      'district': district,
       'address': address,
-      'token': token, // token is optional
+      // 'token': token, // token is optional
     };
   }
 }
