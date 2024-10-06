@@ -1,4 +1,6 @@
+import 'package:dinde_market/config/database_configuration.dart';
 import 'package:dinde_market/models/district.dart';
+import 'package:dinde_market/models/user.dart';
 import 'package:dinde_market/pages/navigation_page/profile_page/profile_widgets/edit_user_page.dart';
 import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/provider/user_provider.dart';
@@ -14,11 +16,17 @@ class UserInfoPage extends StatefulWidget {
 }
 
 class _UserInfoPageState extends State<UserInfoPage> {
+
+  void updateUserById(User user) async {
+    DatabaseHelper dbHelper = DatabaseHelper.instance;
+    await dbHelper.updateUser(user.id, user.toMap());
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        final user = ref.watch(userProvider.notifier).state;
+        var user = ref.watch(userProvider.notifier).state;
         return Scaffold(
           appBar: AppBar(
             title: const Text("Мои данные"),
@@ -99,6 +107,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         ref
                             .read(userProvider.notifier)
                             .updateFirstName(newFirstName);
+                            user = user.copyWith(firstName: newFirstName);
+                            updateUserById(user);
                         setState(() {});
                       },
                     ),
@@ -158,6 +168,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         ref
                             .read(userProvider.notifier)
                             .updateLastName(newLastName);
+                            user = user.copyWith(lastName: newLastName);
+                            updateUserById(user);
                         setState(() {});
                       },
                     ),
@@ -218,6 +230,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         ref
                             .read(userProvider.notifier)
                             .updatePhoneNumber(newPhoneNumber);
+                            user = user.copyWith(phoneNumber: newPhoneNumber);
+                            updateUserById(user);                            
                         setState(() {});
                       },
                     ),
@@ -276,12 +290,10 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                       textFieldHint: "Введите Ваш Регион",
                                     )));
                                     District district = ref.read(districtProvider.notifier).state.firstWhere((d) => d.name == newRegion);
-                                    print("********");
-                                    print("********");
-                                    print("********");
-                                    print(district.name);
                         ref.read(userProvider.notifier).updateDistrict(newRegion);
                         ref.read(userProvider.notifier).updateRegion(district);
+                            user = user.copyWith(district: newRegion);
+                            updateUserById(user);
                         setState(() {});
                       },
                     ),

@@ -56,7 +56,8 @@ class ProductCard extends ConsumerWidget {
                           decoration: TextDecoration.underline,
                           fontSize: 12),
                     );
-                  }
+                  },
+                  height: Utilities.setWidgetHeightByPercentage(context, 18),
                       ),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
