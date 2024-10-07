@@ -1,3 +1,9 @@
+import 'dart:convert';
+
+import 'package:dinde_market/models/order.dart';
+import 'package:dinde_market/provider/cart_list_provider.dart';
+import 'package:dinde_market/provider/token_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +15,7 @@ import 'package:dinde_market/pages/opening_pages/district_modal_widget.dart';
 import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/provider/user_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
+import 'package:http/http.dart' as http;
 
 class CheckoutPage extends ConsumerStatefulWidget {
   const CheckoutPage({super.key});
@@ -20,6 +27,7 @@ class CheckoutPage extends ConsumerStatefulWidget {
 
 class _CheckoutPageState extends ConsumerState<CheckoutPage> {
   var selectedDistrict = "Выберите регион";
+  var urlPrefix = "http://dindemarket.eu-north-1.elasticbeanstalk.com";
 
   final _formKey = GlobalKey<FormState>();
 
@@ -27,6 +35,10 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
   var _lastNameController = TextEditingController();
   var _phoneNumberController = TextEditingController();
   final _streetController = TextEditingController();
+  final _unitController = TextEditingController();
+  final _entranceController = TextEditingController();
+  final _floorController = TextEditingController();
+  final _customerCommentController = TextEditingController();
 
   String errorMessage = '';
   bool isValid = false;
@@ -67,6 +79,14 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
         appBar: AppBar(
           title: const Text("Заказать"),
           centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              ref.read(deliveryPriceProvider.notifier).state =
+                  ref.read(userProvider).region?.priceDelivery ?? 0.0;
+              Navigator.of(context).pop();
+            },
+          ),
         ),
         body: Consumer(
           builder: (context, ref, child) {
@@ -113,7 +133,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         return 'Пожалуйста, введите имя'; // Validation message
                                       } else if (value.length < 2) {
                                         return 'Имя должно содержать не менее 2 символов';
-                                      } else if (!RegExp(r'^[a-zA-Zа-яА-Я]+$')
+                                      } else if (!RegExp(r'^[a-zA-Zа-яА-Я\s]+$')
                                           .hasMatch(value)) {
                                         return 'Имя должно содержать только буквы';
                                       }
@@ -160,7 +180,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         return 'Пожалуйста, введите фамилию'; // Validation message
                                       } else if (value.length < 2) {
                                         return 'Фамилия должна содержать не менее 2 символов';
-                                      } else if (!RegExp(r'^[a-zA-Zа-яА-Я]+$')
+                                      } else if (!RegExp(r'^[a-zA-Zа-яА-Я\s]+$')
                                           .hasMatch(value)) {
                                         return 'Фамилия должна содержать только буквы';
                                       }
@@ -287,6 +307,14 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                                 districtList: districtList);
                                         setState(() {
                                           selectedDistrict = newDistrict;
+                                          ref
+                                                  .read(deliveryPriceProvider
+                                                      .notifier)
+                                                  .state =
+                                              districtList
+                                                  .firstWhere((d) =>
+                                                      d.name == newDistrict)
+                                                  .priceDelivery;
                                         });
                                       }),
                                 ),
@@ -306,9 +334,10 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         return 'Пожалуйста, введите название улицы';
                                       } else if (value.length < 3) {
                                         return 'Название улицы должно содержать не менее 3 символов';
-                                      } else if (!RegExp(r'^[a-zA-Zа-яА-Я]+$')
+                                      } else if (!RegExp(
+                                              r'^[a-zA-Zа-яА-Я0-9\s]+$')
                                           .hasMatch(value)) {
-                                        return 'Название улицы должно содержать только буквы, цифры и пробелы';
+                                        return 'Название улицы должно содержать только буквы, цифры';
                                       }
                                       return null;
                                     },
@@ -355,7 +384,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         height: Utilities
                                             .setWidgetHeightByPercentage(
                                                 context, 5.2),
-                                        child: TextField(
+                                        child: TextFormField(
+                                          controller: _unitController,
                                           decoration: InputDecoration(
                                             hintText: "Квартира",
                                             hintStyle: const TextStyle(
@@ -392,7 +422,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         height: Utilities
                                             .setWidgetHeightByPercentage(
                                                 context, 5.2),
-                                        child: TextField(
+                                        child: TextFormField(
+                                          controller: _entranceController,
                                           decoration: InputDecoration(
                                             hintText: "Подъезд",
                                             hintStyle: const TextStyle(
@@ -429,7 +460,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         height: Utilities
                                             .setWidgetHeightByPercentage(
                                                 context, 5.2),
-                                        child: TextField(
+                                        child: TextFormField(
+                                          controller: _floorController,
                                           textAlign: TextAlign.left,
                                           decoration: InputDecoration(
                                             hintText: "Этаж",
@@ -468,7 +500,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                       const EdgeInsets.symmetric(vertical: 10),
                                   width: Utilities.setWidgetWidthByPercentage(
                                       context, 95),
-                                  child: TextField(
+                                  child: TextFormField(
+                                    controller: _customerCommentController,
                                     textAlign: TextAlign.start,
                                     decoration: InputDecoration(
                                       contentPadding: EdgeInsets.symmetric(
@@ -586,7 +619,27 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                         formKey: _formKey,
                         textButton: "Заказать",
                         validationform: _validateForm,
-                        paymentSelected: paymentSelected))
+                        paymentSelected: paymentSelected,
+                        rawOrder: Order(
+                            phoneNumber: _phoneNumberController.text,
+                            totalDiscount: 0.0,
+                            id: 1,
+                            deliveryPrice: 0.0,
+                            orderStatus: {
+                              OrderStatus.underReview: DateTime.now()
+                            },
+                            customerFirstName: _firstNameController.text,
+                            customerLastName: _lastNameController.text,
+                            customerAddress: CustomerAddress(
+                                city: selectedDistrict,
+                                street: _streetController.text,
+                                unit: _unitController.text,
+                                entrance: _entranceController.text,
+                                floor: _floorController.text,
+                                customerCommments:
+                                    _customerCommentController.text),
+                            orderedProducts: ref.read(cartListNotifierProvider),
+                            totalOrderPrice: 0.0)))
               ],
             );
           },

@@ -546,8 +546,18 @@ Widget orderedProductCard(Product product, BuildContext context) {
             height: 90,
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Image(
-              image: AssetImage(product.photos.first.url),
+            child: Image.network(
+              product.photos.first.url,
+              errorBuilder: (context, error, stackTrace) {
+                return const Text(
+                  'Ошибка загрузки изображения',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Colors.red,
+                      decoration: TextDecoration.underline,
+                      fontSize: 12),
+                );
+              },
             )),
         SizedBox(
           child: Column(
@@ -558,7 +568,7 @@ Widget orderedProductCard(Product product, BuildContext context) {
                 "Товар: ${product.name}",
                 overflow: TextOverflow.fade,
               ),
-              Text("Количество: ${product.count}"),
+              Text("Количество: ${product.amount}"),
               Text("Цена: ${product.price}")
             ],
           ),

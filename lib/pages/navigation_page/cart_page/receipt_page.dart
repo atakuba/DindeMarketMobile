@@ -55,7 +55,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                                   color: Colors.black),
                             ),
                             Text(
-                              "${widget.order.totalOrderPrice} C",
+                              "${widget.order.totalOrderPrice + widget.order.deliveryPrice} C",
                               style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w700,
@@ -238,18 +238,18 @@ class _ReceiptPageState extends State<ReceiptPage> {
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Доставка:",
                           style: TextStyle(
                               color: Color.fromRGBO(135, 146, 155, 1),
                               fontSize: 14,
                               fontWeight: FontWeight.w500),
                         ),
-                        Text("eto dostavka",
-                            style: TextStyle(
+                        Text("${widget.order.deliveryPrice}",
+                            style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
                                 color: Colors.black))
@@ -279,7 +279,7 @@ class _ReceiptPageState extends State<ReceiptPage> {
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          "${widget.order.totalOrderPrice} C",
+                          "${widget.order.totalOrderPrice + widget.order.deliveryPrice} C",
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         )
@@ -292,10 +292,10 @@ class _ReceiptPageState extends State<ReceiptPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               height: Utilities.setWidgetHeightByPercentage(context, 8),
-              child: Text(
+              child: const Text(
                 "Вы можете отследить заказ в личном кабинете.\nЧерез некоторое время с вами свяжутся для уточнения деталей.",
                 overflow: TextOverflow.visible,
-                style: const TextStyle(
+                style: TextStyle(
                     color: Color.fromRGBO(135, 146, 155, 1),
                     fontWeight: FontWeight.w400,
                     fontSize: 14),

@@ -2,6 +2,7 @@ import 'package:dinde_market/config/database_configuration.dart';
 import 'package:dinde_market/models/district.dart';
 import 'package:dinde_market/models/user.dart';
 import 'package:dinde_market/pages/navigation_page/profile_page/profile_widgets/edit_user_page.dart';
+import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/provider/user_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
@@ -16,12 +17,11 @@ class UserInfoPage extends StatefulWidget {
 }
 
 class _UserInfoPageState extends State<UserInfoPage> {
-
   void updateUserById(User user) async {
     DatabaseHelper dbHelper = DatabaseHelper.instance;
     await dbHelper.updateUser(user.id, user.toMap());
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -107,8 +107,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         ref
                             .read(userProvider.notifier)
                             .updateFirstName(newFirstName);
-                            user = user.copyWith(firstName: newFirstName);
-                            updateUserById(user);
+                        user = user.copyWith(firstName: newFirstName);
+                        updateUserById(user);
                         setState(() {});
                       },
                     ),
@@ -168,8 +168,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         ref
                             .read(userProvider.notifier)
                             .updateLastName(newLastName);
-                            user = user.copyWith(lastName: newLastName);
-                            updateUserById(user);
+                        user = user.copyWith(lastName: newLastName);
+                        updateUserById(user);
                         setState(() {});
                       },
                     ),
@@ -230,8 +230,8 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         ref
                             .read(userProvider.notifier)
                             .updatePhoneNumber(newPhoneNumber);
-                            user = user.copyWith(phoneNumber: newPhoneNumber);
-                            updateUserById(user);                            
+                        user = user.copyWith(phoneNumber: newPhoneNumber);
+                        updateUserById(user);
                         setState(() {});
                       },
                     ),
@@ -265,7 +265,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                 height: Utilities.setWidgetHeightByPercentage(
                                     context, 4.2),
                                 child: Text(
-                                  user.region?.name??"",
+                                  user.region?.name ?? "",
                                   style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500),
@@ -289,11 +289,18 @@ class _UserInfoPageState extends State<UserInfoPage> {
                                       textFieldValue: user.region?.name ?? "",
                                       textFieldHint: "Введите Ваш Регион",
                                     )));
-                                    District district = ref.read(districtProvider.notifier).state.firstWhere((d) => d.name == newRegion);
-                        ref.read(userProvider.notifier).updateDistrict(newRegion);
+                        District district = ref
+                            .read(districtProvider.notifier)
+                            .state
+                            .firstWhere((d) => d.name == newRegion);
+                        ref
+                            .read(userProvider.notifier)
+                            .updateDistrict(newRegion);
                         ref.read(userProvider.notifier).updateRegion(district);
-                            user = user.copyWith(district: newRegion);
-                            updateUserById(user);
+                        ref.read(deliveryPriceProvider.notifier).state =
+                            district.priceDelivery;
+                        user = user.copyWith(district: newRegion);
+                        updateUserById(user);
                         setState(() {});
                       },
                     ),

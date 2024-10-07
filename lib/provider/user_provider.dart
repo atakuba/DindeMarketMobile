@@ -50,6 +50,9 @@ class UserNotifier extends StateNotifier<User> {
   void updateUser(User updatedUser) {
     state = updatedUser;
   }
+  double getDeliveryPrice() {
+    return state.region?.priceDelivery??0.0;
+  }
 }
 
 // Define the provider

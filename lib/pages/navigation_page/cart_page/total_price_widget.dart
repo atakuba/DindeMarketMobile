@@ -1,20 +1,44 @@
+import 'dart:convert';
+
+import 'package:dinde_market/provider/token_provider.dart';
+import 'package:dinde_market/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:dinde_market/models/order.dart';
-import 'package:dinde_market/models/product.dart';
-import 'package:dinde_market/models/product_photo.dart';
 import 'package:dinde_market/pages/navigation_page/cart_page/checkout_page.dart';
 import 'package:dinde_market/pages/navigation_page/cart_page/receipt_page.dart';
 import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
+import 'package:http/http.dart' as http;
 
 class TotalPriceWidget {
+  static Future<void> postOrder(Order order, WidgetRef ref) async {
+    final url = Uri.parse("http://dindemarket.eu-north-1.elasticbeanstalk.com/api/orders");
+    final headers = {
+      'Authorization': 'Bearer ${ref.read(tokenProvider)}',
+      'Content-Type': 'application/json'};
+
+    final body = jsonEncode(order.toJson());
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      if (response.statusCode == 200) {
+        var decodeFormat = utf8.decode(response.bodyBytes);
+        final data = jsonDecode(decodeFormat);
+        print(data);
+      } else {
+        print('Failed to post data');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
   static totalPriceCalculation(
       {GlobalKey<FormState>? formKey,
       VoidCallback? validationform,
       required String textButton,
-      bool? paymentSelected}) {
+      bool? paymentSelected,
+      Order? rawOrder}) {
     return Consumer(
       builder: (context, ref, child) {
         final totalProductCount = ref
@@ -27,38 +51,7 @@ class TotalPriceWidget {
         final totalProductDiscountPrice = ref
             .watch(cartListNotifierProvider.notifier)
             .getTotalDiscountPrice();
-        Order order = Order(
-          deliveryPrice: 200,
-          phoneNumber: "+996222222222",
-           totalDiscount: 999,
-            id: 4,
-            orderStatus: {OrderStatus.underReview: DateTime.now()},
-            customerFirstName: "Erbol",
-            customerLastName: "Kira",
-            customerAddress: CustomerAddress(
-                city: "Karakol",
-                street: "kokulov",
-                customerCommments: "Leave at my porch"),
-            orderedProducts: [
-              Product(
-                  // seasonal: true,
-                  // newProduct: true,
-                  discount: 50,
-                  favorite: true,
-                  count: 0,
-                  id: 16,
-                  releaseDate: DateTime.now(),
-                  name: "aКефир отборный Коровка",
-                  photos: [
-                    ProductPhoto(id: 1, url: "assets/offers/sales_pic.png")
-                  ],
-                  price: 1000.0,
-                  description:
-                      "Organic Mountain works as a seller for many organic growers of organic lemons. Organic lemons are easy to spot in your produce aisle. They are just like regular lemons, but they will usually have a few more scars on the outside of the lemon skin. ",
-                  subCategoryId: 1)
-            ],
-            totalOrderPrice: 6000,
-            );
+        final deliveryPrice = ref.watch(deliveryPriceProvider);
         return Container(
           width: double.infinity,
           decoration: const BoxDecoration(
@@ -127,10 +120,10 @@ class TotalPriceWidget {
                             Utilities.setWidgetWidthByPercentage(context, 91),
                         height:
                             Utilities.setWidgetHeightByPercentage(context, 2.5),
-                        child: const Row(
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
+                            const Expanded(
                               child: Text(
                                 "Доставка _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
                                 style: TextStyle(
@@ -140,8 +133,8 @@ class TotalPriceWidget {
                               ),
                             ),
                             Text(
-                              "55555 С",
-                              style: TextStyle(
+                              "$deliveryPrice",
+                              style: const TextStyle(
                                   fontSize: 14, fontWeight: FontWeight.w500),
                             )
                           ],
@@ -169,7 +162,7 @@ class TotalPriceWidget {
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14),
                           ),
-                          Text("$totalProductDiscountPrice С",
+                          Text("${totalProductDiscountPrice + deliveryPrice} С",
                               style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w600))
                         ],
@@ -231,12 +224,43 @@ class TotalPriceWidget {
                                       }
                                       if (paymentSelected != null) {
                                         if (paymentSelected) {
-                                          Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ReceiptPage(
-                                                          ref: ref,
-                                                          order: order)));
+                                          if (rawOrder != null) {
+                                            Order order = Order(
+                                                phoneNumber:
+                                                    rawOrder.phoneNumber,
+                                                totalDiscount:
+                                                    totalProductDiscount,
+                                                id: rawOrder.id,
+                                                deliveryPrice: deliveryPrice,
+                                                orderStatus:
+                                                    rawOrder.orderStatus,
+                                                customerFirstName:
+                                                    rawOrder.customerFirstName,
+                                                customerLastName:
+                                                    rawOrder.customerLastName,
+                                                customerAddress:
+                                                    rawOrder.customerAddress,
+                                                orderedProducts:
+                                                    rawOrder.orderedProducts,
+                                                totalOrderPrice:
+                                                    totalProductDiscountPrice);
+                                                    postOrder(order, ref);
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ReceiptPage(
+                                                            ref: ref,
+                                                            order: order)));
+                                          }
+                                          ref
+                                              .read(deliveryPriceProvider
+                                                  .notifier)
+                                              .state = ref
+                                                  .read(userProvider)
+                                                  .region
+                                                  ?.priceDelivery ??
+                                              0.0;
+
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             const SnackBar(

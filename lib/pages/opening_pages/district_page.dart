@@ -40,9 +40,9 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
       if (data is List) {
         districtList = data.map((json) => District.fromJson(json)).toList();
         
-        addDistrictsToDb(districtList);
+        // addDistrictsToDb(districtList);
         selectedDistrict = districtList.first.name;
-        print("checkcheck");
+        ref.read(districtProvider.notifier).state = districtList;
         setState(() {});
       } else {
         print('Error: Decoded data is not a list');
@@ -52,13 +52,6 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
       throw Exception('Failed to load data');
     }
   }
-
-  void addDistrictsToDb(List<District> districts) async {
-    DatabaseHelper dbHelper = DatabaseHelper.instance;
-    await dbHelper.insertAllDistrict(districts);
-  }
-
-  
 
   void addUserToDb(User user) async {
     DatabaseHelper dbHelper = DatabaseHelper.instance;
