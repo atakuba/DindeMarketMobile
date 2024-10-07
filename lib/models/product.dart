@@ -72,4 +72,10 @@ class Product {
       discount: json['discount'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+    };
+  }
 }

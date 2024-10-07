@@ -4,9 +4,12 @@ import 'package:dinde_market/models/category.dart';
 import 'package:dinde_market/models/db_cart_product.dart';
 import 'package:dinde_market/models/db_favorite_product.dart';
 import 'package:dinde_market/models/district.dart';
+import 'package:dinde_market/models/order.dart';
 import 'package:dinde_market/models/product.dart';
 import 'package:dinde_market/models/user.dart';
+import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/provider/district_provider.dart';
+import 'package:dinde_market/provider/order_provider.dart';
 import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/provider/token_provider.dart';
 import 'package:dinde_market/provider/user_provider.dart';
@@ -30,6 +33,37 @@ class _HomePageState extends ConsumerState<HomePage> {
   var urlPrefix = "http://dindemarket.eu-north-1.elasticbeanstalk.com";
   List<Category> categoryList = [];
 
+  Future<void> fetchOrders() async {
+    final response = await http.get(
+      Uri.parse('$urlPrefix/api/orders'),
+      headers: {
+        'Authorization': 'Bearer ${ref.read(tokenProvider)}',
+        'Content-Type': 'application/json'
+      },
+    );
+    if (response.statusCode == 200) {
+      // If the server returns an OK response, parse the JSON.
+      var decodeFormat = utf8.decode(response.bodyBytes);
+      var data = json.decode(decodeFormat);
+      if (data is List) {
+        List<Order> orderList =
+            data.map((json) => Order.fromJson(json)).toList();
+
+        ref.read(orderProvider.notifier).state = orderList;
+      } else {
+        print('Error: Decoded data is not a list');
+      }
+    } else {
+      // If the server did not return a 200 OK response, throw an exception.
+      throw Exception('Failed to load data');
+    }
+  }
+
+  void addDistrictsToDb(List<District> districts) async {
+    DatabaseHelper dbHelper = DatabaseHelper.instance;
+    await dbHelper.insertAllDistrict(districts);
+  }
+
   Future<void> fetchProducts() async {
     final response = await http.get(
       Uri.parse(
@@ -51,30 +85,29 @@ class _HomePageState extends ConsumerState<HomePage> {
         List<int> dbFavoriteID =
             dbFavorite.map((dbProduct) => dbProduct.id).toList();
 
-            
         List<DbCartProduct> dbInCart = await fetchProductsInCart();
         List<int> dbInCartID =
             dbInCart.map((dbProduct) => dbProduct.id).toList();
 
-        // User user = await fetchUserFromDb();
-
         productList = productList.map((product) {
-          if(dbInCartID.contains(product.id)) {
-            return product.copyWith(amount: dbInCart.firstWhere((cart) => cart.id == product.id).amount);
+          if (dbInCartID.contains(product.id)) {
+            return product.copyWith(
+                amount: dbInCart
+                    .firstWhere((cart) => cart.id == product.id)
+                    .amount);
           }
           return product;
         }).toList();
 
         productList = productList.map((product) {
-          if(dbFavoriteID.contains(product.id)) {
+          if (dbFavoriteID.contains(product.id)) {
             return product.copyWith(favorite: true);
           }
           return product;
         }).toList();
-        
+
         ref.read(productListProvider.notifier).state = productList;
 
-      
         // ref.read(userProvider.notifier).updateUser(user);
       } else {
         print('Error: Decoded data is not a list');
@@ -130,29 +163,33 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   Future<List<District>> getAllDistricts() async {
     DatabaseHelper dbHelper = DatabaseHelper.instance;
-    List<Map<String, dynamic>> districtList = await dbHelper.queryAllDistricts();
+    List<Map<String, dynamic>> districtList =
+        await dbHelper.queryAllDistricts();
     return districtList.map((d) => District.fromMap(d)).toList();
   }
 
   Future<User> fetchUserFromDb() async {
-        List<District> districts = await getAllDistricts();
-        ref.read(districtProvider.notifier).state = districts;
+    List<District> districts = await getAllDistricts();
+    ref.read(districtProvider.notifier).state = districts;
 
     List<Map<String, dynamic>> users =
         await DatabaseHelper.instance.queryAllUsers();
     Map<String, dynamic> firstUserMap = users.first;
-    User futureUser = User.fromMap(firstUserMap); 
+    User futureUser = User.fromMap(firstUserMap);
 
-if (futureUser.address == null) {
-  futureUser = futureUser.copyWith(addresss: "Аддресс не указан");
-}
+    if (futureUser.address == null) {
+      futureUser = futureUser.copyWith(addresss: "Аддресс не указан");
+    }
 
-if (futureUser.phoneNumber == null) {
-  futureUser = futureUser.copyWith(phoneNumber: "+996 (000) 00 00 00");
-}
-District district = ref.read(districtProvider.notifier).state.firstWhere((d) => d.name == futureUser?.district);
-print(district.name);
-futureUser = futureUser.copyWith(region: district);
+    if (futureUser.phoneNumber == null) {
+      futureUser = futureUser.copyWith(phoneNumber: "+996 (000) 00 00 00");
+    }
+    District district = ref
+        .read(districtProvider.notifier)
+        .state
+        .firstWhere((d) => d.name == futureUser.district);
+    ref.read(deliveryPriceProvider.notifier).state = district.priceDelivery;
+    futureUser = futureUser.copyWith(region: district);
     ref.read(userProvider.notifier).state = futureUser;
     return futureUser;
   }
@@ -163,6 +200,8 @@ futureUser = futureUser.copyWith(region: district);
     fetchProducts();
     fetchCategories();
     fetchUserFromDb();
+    fetchOrders();
+    addDistrictsToDb(ref.read(districtProvider));
   }
 
   @override
@@ -208,12 +247,13 @@ futureUser = futureUser.copyWith(region: district);
                   ),
                   InkWell(
                     child: Image(
-                    image: const AssetImage("assets/tiktok_logo.png"),
-                    width: Utilities.setWidgetWidthByPercentage(context, 19.7),
-                  ),
-                  onTap: () {
-                    fetchUserFromDb();
-                  },
+                      image: const AssetImage("assets/tiktok_logo.png"),
+                      width:
+                          Utilities.setWidgetWidthByPercentage(context, 19.7),
+                    ),
+                    onTap: () {
+                      fetchUserFromDb();
+                    },
                   ),
                   Image(
                     image: const AssetImage("assets/instagram_logo.png"),
@@ -316,9 +356,8 @@ futureUser = futureUser.copyWith(region: district);
             ),
           ),
           onTap: () {
-            
-        
-    fetchUserFromDb();
+            fetchOrders();
+            print(ref.read(orderProvider.notifier).state);
           },
         ),
         Container(
