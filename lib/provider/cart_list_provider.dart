@@ -21,6 +21,9 @@ class CartListNotifier extends StateNotifier<List<Product>> {
     });
   }
   void amountIncrement(Product product) {
+    if (product.amount + 1 >= product.count) {
+      return;
+    }
     // List<int> productIdList = ref.watch(productListProvider.notifier).state.map((p) => p.id).toList();
 
     final productListNotifier = ref.read(productListProvider.notifier);

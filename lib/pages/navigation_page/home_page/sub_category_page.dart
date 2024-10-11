@@ -1,3 +1,4 @@
+import 'package:dinde_market/pages/error_page/empty_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -50,71 +51,82 @@ class SubCategoryPage extends StatelessWidget {
           ),
           Container(
               alignment: Alignment.center,
-              child: CustomizedSearchBar(context: context)),
-          Expanded(
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      padding: EdgeInsets.zero,
-                      height:
-                          Utilities.setWidgetHeightByPercentage(context, 61),
-                      width: Utilities.setWidgetWidthByPercentage(context, 95),
-                      child: Consumer(
-                        builder: (context, ref, child) {
-                          ref.watch(productListProvider);
-                          return ListView.separated(
-                            itemCount: subcategoryList.length,
+              child: CustomizedSearchBar(parentContext: context)),
+          subcategoryList.length != 0
+              ? Expanded(
+                  child: Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: Container(
                             padding: EdgeInsets.zero,
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const Divider(
-                              height: 0.01,
-                              color: Color.fromRGBO(230, 234, 251, 1),
-                            ),
-                            itemBuilder: (context, index) {
-                              final subCategory = subcategoryList[index];
-                              var productList = ref.watch(productListProvider.notifier).state.where((p) => p.subCategoryId == subCategory.id).toList();
-                              if (subcategoryList.isNotEmpty) {
-                                return InkWell(
-                                  child: Container(
-                                    alignment: Alignment.centerLeft,
-                                    height:
-                                        Utilities.setWidgetHeightByPercentage(
-                                            context, 5.5),
-                                    child: Text(
-                                      subCategory.name,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15),
-                                    ),
+                            height: Utilities.setWidgetHeightByPercentage(
+                                context, 61),
+                            width: Utilities.setWidgetWidthByPercentage(
+                                context, 95),
+                            child: Consumer(
+                              builder: (context, ref, child) {
+                                ref.watch(productListProvider);
+                                return ListView.separated(
+                                  itemCount: subcategoryList.length,
+                                  padding: EdgeInsets.zero,
+                                  separatorBuilder:
+                                      (BuildContext context, int index) =>
+                                          const Divider(
+                                    height: 0.01,
+                                    color: Color.fromRGBO(230, 234, 251, 1),
                                   ),
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ProductListPage(
-                                                    productListDisplay: productList,
-                                                        // subCategory.productList,
-                                                    pageTitle:
-                                                        subCategory.name)));
+                                  itemBuilder: (context, index) {
+                                    final subCategory = subcategoryList[index];
+                                    var productList = ref
+                                        .watch(productListProvider.notifier)
+                                        .state
+                                        .where((p) =>
+                                            p.subCategoryId == subCategory.id)
+                                        .toList();
+                                    if (subcategoryList.isNotEmpty) {
+                                      return InkWell(
+                                        child: Container(
+                                          alignment: Alignment.centerLeft,
+                                          height: Utilities
+                                              .setWidgetHeightByPercentage(
+                                                  context, 5.5),
+                                          child: Text(
+                                            subCategory.name,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 15),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProductListPage(
+                                                          productListDisplay:
+                                                              productList,
+                                                          pageTitle: subCategory
+                                                              .name)));
+                                        },
+                                      );
+                                    } else {
+                                      return const SizedBox.shrink();
+                                    }
                                   },
                                 );
-                              } else {
-                                return const SizedBox.shrink();
-                              }
-                            },
-                          );
-                        },
+                              },
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
+                )
+              : Container(
+                  alignment: Alignment.center,
+                  child: Text("Ничего не найдено..."),
                 ),
-              ],
-            ),
-          )
         ],
       ),
     );

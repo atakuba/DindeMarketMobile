@@ -269,6 +269,8 @@ class _CartPageState extends State<CartPage> {
           Expanded(
               flex: 15,
               child: TotalPriceWidget.totalPriceCalculation(
+                  isCashPaymentSelected: false,
+                  isOnlinePaymentSelected: false,
                   textButton: "Оформить"))
         ]));
   }

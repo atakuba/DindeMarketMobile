@@ -16,6 +16,33 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
+  late PageController _pageController;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  void _nextPage() {
+    if (_currentPage < widget.product.photos.length - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _previousPage() {
+    if (_currentPage > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,16 +105,63 @@ class _ProductPageState extends State<ProductPage> {
                 ),
               ),
               Expanded(
-                flex: 250,
-                child: SizedBox(
-                  height: Utilities.setWidgetHeightByPercentage(context, 37),
-                  width: Utilities.setWidgetWidthByPercentage(context, 80),
-                  child: Image.network(
-                    widget.product.photos.first.url,
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
+                  flex: 250,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        height: Utilities.setWidgetHeightByPercentage(
+                            context, 37), // Height of the image slider
+                        child: PageView.builder(
+                          controller: _pageController,
+                          itemCount:
+                              widget.product.photos.length, // Number of images
+                          onPageChanged: (index) {
+                            setState(() {
+                              _currentPage = index; // Update current page index
+                            });
+                          },
+                          itemBuilder: (context, index) {
+                            return SizedBox(
+                              width: MediaQuery.of(context)
+                                  .size
+                                  .width, // Full width for each image
+                              child: Image.network(
+                                widget.product.photos[index]
+                                    .url, // Current image URL
+                                fit: BoxFit.cover, // Cover the entire area
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      // Previous button
+                      if (_currentPage >
+                          0) // Show only if there is a previous image
+                        Positioned(
+                          left: 10.0,
+                          child: IconButton(
+                            icon: Icon(Icons.arrow_back_ios,
+                                color: const Color.fromARGB(255, 84, 222, 88),
+                                size: 30), // Back arrow
+                            onPressed: _previousPage,
+                          ),
+                        ),
+                      // Next button
+                      if (_currentPage <
+                          widget.product.photos.length -
+                              1) // Show only if there is a next image
+                        Positioned(
+                          right: 10.0,
+                          child: IconButton(
+                            icon: Icon(Icons.arrow_forward_ios,
+                                color: Color.fromARGB(255, 84, 222, 88),
+                                size: 30), // Next arrow
+                            onPressed: _nextPage,
+                          ),
+                        ),
+                    ],
+                  )),
               Expanded(
                 flex: 247,
                 child: Container(

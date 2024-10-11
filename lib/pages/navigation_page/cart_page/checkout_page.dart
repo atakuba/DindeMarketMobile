@@ -42,7 +42,9 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
 
   String errorMessage = '';
   bool isValid = false;
-  bool paymentSelected = false;
+  bool isOnlinePaymentSelected = false;
+  bool isCashPaymentSelected = false;
+
   @override
   void initState() {
     super.initState();
@@ -59,12 +61,12 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
 
   void _validateForm() {
     setState(() {
-      if (paymentSelected) {
-        // If form is valid, do something
+      if (isOnlinePaymentSelected || isCashPaymentSelected) {
+        // If at least one payment method is selected, the form is valid
         isValid = true;
         errorMessage = '';
       } else {
-        // If form is not valid, display an error message
+        // If no payment method is selected, display an error message
         isValid = false;
         errorMessage = 'Выберите способ оплаты';
       }
@@ -103,7 +105,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                             margin: const EdgeInsets.symmetric(vertical: 7),
                             color: Colors.white,
                             height: Utilities.setWidgetHeightByPercentage(
-                                context, 30),
+                                context, 40),
                             child: Column(
                               children: [
                                 Container(
@@ -125,7 +127,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   width: Utilities.setWidgetWidthByPercentage(
                                       context, 95),
                                   height: Utilities.setWidgetHeightByPercentage(
-                                      context, 5.2),
+                                      context, 8),
                                   child: TextFormField(
                                     controller: _firstNameController,
                                     validator: (value) {
@@ -140,6 +142,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                       return null;
                                     },
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 10),
                                       hintText: "Имя",
                                       hintStyle: const TextStyle(
                                           color:
@@ -161,6 +164,12 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                           width: 1,
                                         ),
                                       ),
+                                      errorBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromRGBO(214, 18, 18, 1),
+                                          width: 1,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -172,7 +181,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   width: Utilities.setWidgetWidthByPercentage(
                                       context, 95),
                                   height: Utilities.setWidgetHeightByPercentage(
-                                      context, 5.2),
+                                      context, 8),
                                   child: TextFormField(
                                     controller: _lastNameController,
                                     validator: (value) {
@@ -187,6 +196,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                       return null;
                                     },
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 10),
                                       hintText: "Фамилия",
                                       hintStyle: const TextStyle(
                                           color:
@@ -208,6 +218,12 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                           width: 1,
                                         ),
                                       ),
+                                      errorBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromRGBO(214, 18, 18, 1),
+                                          width: 1,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -217,7 +233,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   width: Utilities.setWidgetWidthByPercentage(
                                       context, 95),
                                   height: Utilities.setWidgetHeightByPercentage(
-                                      context, 8),
+                                      context, 12),
                                   child: TextFormField(
                                     controller: _phoneNumberController,
                                     inputFormatters: [
@@ -235,6 +251,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                       return null;
                                     },
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 10),
                                       hintText: "+996 (XXX) XX XX XX",
                                       hintStyle: const TextStyle(
                                           color:
@@ -253,6 +270,12 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         borderSide: BorderSide(
                                           color:
                                               Color.fromRGBO(185, 212, 191, 1),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      errorBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromRGBO(214, 18, 18, 1),
                                           width: 1,
                                         ),
                                       ),
@@ -326,7 +349,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   width: Utilities.setWidgetWidthByPercentage(
                                       context, 95),
                                   height: Utilities.setWidgetHeightByPercentage(
-                                      context, 5.2),
+                                      context, 8),
                                   child: TextFormField(
                                     controller: _streetController,
                                     validator: (value) {
@@ -342,6 +365,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                       return null;
                                     },
                                     decoration: InputDecoration(
+                                      contentPadding: EdgeInsets.only(left: 10),
                                       hintText: "Улица",
                                       hintStyle: const TextStyle(
                                           color:
@@ -360,6 +384,12 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                         borderSide: BorderSide(
                                           color:
                                               Color.fromRGBO(185, 212, 191, 1),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      errorBorder: const OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Color.fromRGBO(214, 18, 18, 1),
                                           width: 1,
                                         ),
                                       ),
@@ -383,10 +413,12 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                                 context, 28),
                                         height: Utilities
                                             .setWidgetHeightByPercentage(
-                                                context, 5.2),
+                                                context, 8),
                                         child: TextFormField(
                                           controller: _unitController,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.only(left: 10),
                                             hintText: "Квартира",
                                             hintStyle: const TextStyle(
                                                 color: Color.fromRGBO(
@@ -421,10 +453,12 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                                 context, 28),
                                         height: Utilities
                                             .setWidgetHeightByPercentage(
-                                                context, 5.2),
+                                                context, 8),
                                         child: TextFormField(
                                           controller: _entranceController,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.only(left: 10),
                                             hintText: "Подъезд",
                                             hintStyle: const TextStyle(
                                                 color: Color.fromRGBO(
@@ -459,11 +493,13 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                                 context, 28),
                                         height: Utilities
                                             .setWidgetHeightByPercentage(
-                                                context, 5.2),
+                                                context, 8),
                                         child: TextFormField(
                                           controller: _floorController,
                                           textAlign: TextAlign.left,
                                           decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.only(left: 10),
                                             hintText: "Этаж",
                                             hintStyle: const TextStyle(
                                                 color: Color.fromRGBO(
@@ -496,6 +532,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 5),
+                                  height: Utilities.setWidgetHeightByPercentage(
+                                      context, 11),
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 10),
                                   width: Utilities.setWidgetWidthByPercentage(
@@ -538,49 +576,98 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                               ],
                             )),
                         Container(
-                            margin: const EdgeInsets.symmetric(vertical: 5),
-                            color: Colors.white,
-                            height: Utilities.setWidgetHeightByPercentage(
-                                context, 20),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 15),
-                                  alignment: Alignment.centerLeft,
-                                  child: const Text(
-                                    "Способ оплаты",
-                                    style: TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600),
-                                  ),
+                          margin: const EdgeInsets.symmetric(vertical: 5),
+                          color: Colors.white,
+                          height: Utilities.setWidgetHeightByPercentage(
+                              context, 20),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 15),
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  "Способ оплаты",
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                                Column(
-                                  children: [
-                                    Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 5),
+                              ),
+                              Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 20,
+                                            top: 5,
+                                            bottom: 5,
+                                            right: 10),
                                         decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            border: !paymentSelected
-                                                ? Border.all(
-                                                    width: 1,
-                                                    color: const Color.fromRGBO(
-                                                        177, 207, 183, 1))
-                                                : Border.all(
-                                                    width: 2,
-                                                    color: Colors.green)),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: isOnlinePaymentSelected
+                                              ? Border.all(
+                                                  width: 2, color: Colors.green)
+                                              : Border.all(
+                                                  width: 1,
+                                                  color: const Color.fromRGBO(
+                                                      177, 207, 183, 1)),
+                                        ),
                                         width: Utilities
                                             .setWidgetWidthByPercentage(
-                                                context, 95),
+                                                context, 41),
                                         height: Utilities
                                             .setWidgetHeightByPercentage(
                                                 context, 8),
                                         child: TextButton(
                                           child: const Text(
+                                            textAlign: TextAlign.center,
                                             "Оплата \nонлайн",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              // Deselect cash payment if online is selected
+                                              isOnlinePaymentSelected = true;
+                                              isCashPaymentSelected =
+                                                  false; // Deselect the cash payment option
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 10,
+                                            top: 5,
+                                            bottom: 5,
+                                            right: 20),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: isCashPaymentSelected
+                                              ? Border.all(
+                                                  width: 2, color: Colors.green)
+                                              : Border.all(
+                                                  width: 1,
+                                                  color: const Color.fromRGBO(
+                                                      177, 207, 183, 1)),
+                                        ),
+                                        width: Utilities
+                                            .setWidgetWidthByPercentage(
+                                                context, 41),
+                                        height: Utilities
+                                            .setWidgetHeightByPercentage(
+                                                context, 8),
+                                        child: TextButton(
+                                          child: const Text(
+                                            textAlign: TextAlign.center,
+                                            "Оплата \nналичными",
                                             style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 15,
@@ -588,27 +675,30 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                           ),
                                           onPressed: () {
                                             setState(() {
-                                              if (paymentSelected) {
-                                                paymentSelected = false;
-                                              } else {
-                                                paymentSelected = true;
-                                              }
+                                              // Deselect online payment if cash is selected
+                                              isCashPaymentSelected = true;
+                                              isOnlinePaymentSelected =
+                                                  false; // Deselect the online payment option
                                             });
                                           },
-                                        )),
-                                    if (!isValid && errorMessage.isNotEmpty)
-                                      Container(
-                                        alignment: Alignment.topCenter,
-                                        child: Text(
-                                          errorMessage,
-                                          style: const TextStyle(
-                                              color: Colors.red),
                                         ),
                                       ),
-                                  ],
-                                )
-                              ],
-                            )),
+                                    ],
+                                  ),
+                                  if (!isValid && errorMessage.isNotEmpty)
+                                    Container(
+                                      alignment: Alignment.topCenter,
+                                      child: Text(
+                                        errorMessage,
+                                        style:
+                                            const TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -619,7 +709,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                         formKey: _formKey,
                         textButton: "Заказать",
                         validationform: _validateForm,
-                        paymentSelected: paymentSelected,
+                        isCashPaymentSelected: isCashPaymentSelected,
+                        isOnlinePaymentSelected: isOnlinePaymentSelected,
                         rawOrder: Order(
                             phoneNumber: _phoneNumberController.text,
                             totalDiscount: 0.0,
