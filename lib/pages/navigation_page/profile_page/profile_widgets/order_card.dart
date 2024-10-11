@@ -498,31 +498,41 @@ Widget dashedLine(Color color, {bool isHorizontal = true}) {
       margin: const EdgeInsets.symmetric(horizontal: 8.0), // Optional margin
       child: LayoutBuilder(
         builder: (context, constraints) {
-          return Flex(
-            direction: isHorizontal ? Axis.horizontal : Axis.vertical,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(
-              ((isHorizontal
-                          ? constraints.constrainWidth()
-                          : constraints.constrainHeight()) /
-                      10.floor())
-                  .toInt(),
-              (index) {
-                return SizedBox(
-                  width: isHorizontal
-                      ? 4
-                      : 1, // Width of each dash (for horizontal)
-                  height: isHorizontal
-                      ? 1
-                      : 6, // Height of each dash (for vertical)
-                  child: DecoratedBox(
-                    decoration:
-                        BoxDecoration(color: color), // Color of the dashes
+          return Padding(
+              padding: EdgeInsets.only(bottom: 4),
+              child: Column(
+                mainAxisAlignment:
+                    MainAxisAlignment.end, // Aligns children to the bottom
+                children: [
+                  Flexible(
+                    child: Flex(
+                      direction: isHorizontal ? Axis.horizontal : Axis.vertical,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: List.generate(
+                        ((isHorizontal
+                                    ? constraints.constrainWidth()
+                                    : constraints.constrainHeight()) /
+                                10.floor())
+                            .toInt(),
+                        (index) {
+                          return SizedBox(
+                            width: isHorizontal
+                                ? 4
+                                : 1, // Width of each dash (for horizontal)
+                            height: isHorizontal
+                                ? 1
+                                : 6, // Height of each dash (for vertical)
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                  color: color), // Color of the dashes
+                            ),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                );
-              },
-            ),
-          );
+                ],
+              ));
         },
       ),
     ),

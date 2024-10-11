@@ -39,7 +39,7 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
       var data = json.decode(decodeFormat);
       if (data is List) {
         districtList = data.map((json) => District.fromJson(json)).toList();
-        
+
         // addDistrictsToDb(districtList);
         selectedDistrict = districtList.first.name;
         ref.read(districtProvider.notifier).state = districtList;
@@ -58,8 +58,17 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
     await dbHelper.insertUser(user.toMap());
   }
 
+  void addDistrictsToDb(List<District> districts) async {
+    DatabaseHelper dbHelper = DatabaseHelper.instance;
+    await dbHelper.insertAllDistrict(districts);
+  }
+
   Future<void> postRegionsID(String region) async {
-    int regionId = ref.read(districtProvider.notifier).state.firstWhere((d) => d.name == region).id;
+    int regionId = ref
+        .read(districtProvider.notifier)
+        .state
+        .firstWhere((d) => d.name == region)
+        .id;
     final url = Uri.parse("$urlPrefix/api/clients");
     final headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({"regionId": regionId});
@@ -152,6 +161,7 @@ class _DistrictPageState extends ConsumerState<DistrictPage> {
                 child: TextButton(
                   onPressed: () async {
                     if (selectedDistrict.isNotEmpty) {
+                      addDistrictsToDb(ref.read(districtProvider));
                       await postRegionsID(selectedDistrict);
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const MyApp()));

@@ -6,8 +6,12 @@ import 'package:dinde_market/utility/utilities.dart';
 
 class CategoryCard extends StatefulWidget {
   final Category category;
+  // final bool topTitle;
 
-  const CategoryCard({super.key, required this.category});
+  const CategoryCard({
+    super.key,
+    required this.category,
+  });
 
   @override
   State<CategoryCard> createState() => CategoryCardState();

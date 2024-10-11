@@ -6,10 +6,13 @@ import 'package:dinde_market/models/db_favorite_product.dart';
 import 'package:dinde_market/models/district.dart';
 import 'package:dinde_market/models/order.dart';
 import 'package:dinde_market/models/product.dart';
+import 'package:dinde_market/models/sub_category.dart';
 import 'package:dinde_market/models/user.dart';
+import 'package:dinde_market/pages/navigation_page/home_page/sub_category_page.dart';
 import 'package:dinde_market/provider/cart_list_provider.dart';
 import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/provider/order_provider.dart';
+import 'package:dinde_market/provider/product_category_provider.dart';
 import 'package:dinde_market/provider/products_provider.dart';
 import 'package:dinde_market/provider/token_provider.dart';
 import 'package:dinde_market/provider/user_provider.dart';
@@ -32,6 +35,38 @@ class _HomePageState extends ConsumerState<HomePage> {
       GlobalKey<NavigatorState>();
   var urlPrefix = "http://dindemarket.eu-north-1.elasticbeanstalk.com";
   List<Category> categoryList = [];
+  List<Category> specialProductCategory = [];
+  List<SubCategory> searchSubcategoryList = [];
+
+  Future<void> fetchSearchSubcategories(String productName) async {
+    final response = await http.get(
+      Uri.parse(
+        '$urlPrefix/subcategories/search?name=$productName',
+      ),
+      headers: {
+        'Authorization': 'Bearer ${ref.read(tokenProvider)}',
+        'Content-Type': 'application/json'
+      },
+    );
+    if (response.statusCode == 200) {
+      // If the server returns an OK response, parse the JSON.
+      var decodeFormat = utf8.decode(response.bodyBytes);
+      var data = json.decode(decodeFormat);
+      if (data is List) {
+        List<Category> fetchSpecialProducts = data
+            .map((json) => Category.fromJson(json))
+            .cast<Category>()
+            .toList();
+        setState(() {
+          ref.read(specialProductCategoryProvider.notifier).state =
+              fetchSpecialProducts;
+        });
+      } else {}
+    } else {
+      // If the server did not return a 200 OK response, throw an exception.
+      throw Exception('Failed to load data');
+    }
+  }
 
   Future<void> fetchOrders() async {
     final response = await http.get(
@@ -59,9 +94,32 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
   }
 
-  void addDistrictsToDb(List<District> districts) async {
-    DatabaseHelper dbHelper = DatabaseHelper.instance;
-    await dbHelper.insertAllDistrict(districts);
+  Future<void> fetchSpecialProducts() async {
+    final response = await http.get(
+      Uri.parse('$urlPrefix/api/categories/favorites'),
+      headers: {
+        'Authorization': 'Bearer ${ref.read(tokenProvider)}',
+        'Content-Type': 'application/json'
+      },
+    );
+    if (response.statusCode == 200) {
+      // If the server returns an OK response, parse the JSON.
+      var decodeFormat = utf8.decode(response.bodyBytes);
+      var data = json.decode(decodeFormat);
+      if (data is List) {
+        List<Category> fetchSpecialProducts = data
+            .map((json) => Category.fromJson(json))
+            .cast<Category>()
+            .toList();
+        setState(() {
+          ref.read(specialProductCategoryProvider.notifier).state =
+              fetchSpecialProducts;
+        });
+      } else {}
+    } else {
+      // If the server did not return a 200 OK response, throw an exception.
+      throw Exception('Failed to load data');
+    }
   }
 
   Future<void> fetchProducts() async {
@@ -199,14 +257,14 @@ class _HomePageState extends ConsumerState<HomePage> {
     super.initState();
     fetchProducts();
     fetchCategories();
+    fetchSpecialProducts();
     fetchUserFromDb();
     fetchOrders();
-    addDistrictsToDb(ref.read(districtProvider));
   }
 
   @override
   Widget build(BuildContext context) {
-    // print(categoryList.first.name);
+    specialProductCategory = ref.watch(specialProductCategoryProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Navigator(
@@ -251,9 +309,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       width:
                           Utilities.setWidgetWidthByPercentage(context, 19.7),
                     ),
-                    onTap: () {
-                      fetchUserFromDb();
-                    },
+                    onTap: () {},
                   ),
                   Image(
                     image: const AssetImage("assets/instagram_logo.png"),
@@ -276,7 +332,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     children: [
                       Expanded(
                         flex: 1,
-                        child: CustomizedSearchBar(context: context),
+                        child: CustomizedSearchBar(parentContext: context),
                       ),
                       Expanded(
                         flex: 2,
@@ -284,30 +340,26 @@ class _HomePageState extends ConsumerState<HomePage> {
                           padding: EdgeInsets.symmetric(
                               horizontal: Utilities.setWidgetWidthByPercentage(
                                   context, 4.5)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Stack(
-                                alignment: Alignment.topCenter,
-                                children: [
-                                  _specialOfferBox(
-                                    context: context,
-                                    text: "Новинки",
-                                    fileName: 'assets/offers/news_pic.png',
-                                  ),
-                                ],
-                              ),
-                              _specialOfferBox(
-                                  context: context,
-                                  text: "Акции",
-                                  fileName: 'assets/offers/sales_pic.png'),
-                              _specialOfferBox(
-                                  context: context,
-                                  text: "Сезонные продукты",
-                                  fileName:
-                                      'assets/offers/seasonal_products_pic.png'),
-                            ],
-                          ),
+                          child: specialProductCategory.length != 0
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    _specialOfferBox(
+                                        context: context,
+                                        specialCategory:
+                                            specialProductCategory[0]),
+                                    _specialOfferBox(
+                                        context: context,
+                                        specialCategory:
+                                            specialProductCategory[1]),
+                                    _specialOfferBox(
+                                        context: context,
+                                        specialCategory:
+                                            specialProductCategory[2]),
+                                  ],
+                                )
+                              : Container(),
                         ),
                       ),
                     ],
@@ -341,38 +393,65 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _specialOfferBox(
-      {required BuildContext context,
-      required String text,
-      required String fileName}) {
-    return Column(
-      children: [
-        InkWell(
-          child: SizedBox(
-            height: Utilities.setWidgetHeightByPercentage(context, 13.05),
-            child: Image(
-              image: AssetImage(fileName),
-              width: Utilities.setWidgetWidthByPercentage(context, 28.3),
+  Widget _specialOfferBox({
+    required BuildContext context,
+    required Category specialCategory,
+    // required String text,
+    // required String fileName
+  }) {
+    return InkWell(
+        child: Column(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Container(
+                  width: Utilities.setWidgetWidthByPercentage(context, 28.8),
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10))),
+                  child: Image.network(
+                    specialCategory.image,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Text(
+                        'Ошибка загрузки изображения',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.red,
+                            decoration: TextDecoration.underline,
+                            fontSize: 12),
+                      );
+                    },
+                  )),
             ),
-          ),
-          onTap: () {
-            fetchOrders();
-            print(ref.read(orderProvider.notifier).state);
-          },
+            Expanded(
+              flex: 1,
+              child: Container(
+                width: Utilities.setWidgetWidthByPercentage(context, 28.8),
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10))),
+                child: Text(
+                  specialCategory.name,
+                  textAlign: TextAlign.center,
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                ),
+              ),
+            ),
+          ],
         ),
-        Container(
-          alignment: Alignment.center,
-          height: Utilities.setWidgetHeightByPercentage(context, 3.1),
-          width: Utilities.setWidgetWidthByPercentage(context, 28.3),
-          child: Text(
-            text,
-            softWrap: true,
-            overflow: TextOverflow.visible,
-            textAlign: TextAlign.center,
-          ),
-        ),
-      ],
-    );
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => SubCategoryPage(
+                    subcategoryList: specialCategory.subCategoryList,
+                    categoryName: specialCategory.name,
+                  )));
+        });
   }
 
   Widget _categoryScrollBar() {

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dinde_market/pages/navigation_page/profile_page/profile_widgets/order_card.dart';
 import 'package:dinde_market/provider/token_provider.dart';
 import 'package:dinde_market/provider/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +15,12 @@ import 'package:http/http.dart' as http;
 
 class TotalPriceWidget {
   static Future<void> postOrder(Order order, WidgetRef ref) async {
-    final url = Uri.parse("http://dindemarket.eu-north-1.elasticbeanstalk.com/api/orders");
+    final url = Uri.parse(
+        "http://dindemarket.eu-north-1.elasticbeanstalk.com/api/orders");
     final headers = {
       'Authorization': 'Bearer ${ref.read(tokenProvider)}',
-      'Content-Type': 'application/json'};
+      'Content-Type': 'application/json'
+    };
 
     final body = jsonEncode(order.toJson());
     try {
@@ -33,11 +36,13 @@ class TotalPriceWidget {
       print('Error: $e');
     }
   }
+
   static totalPriceCalculation(
       {GlobalKey<FormState>? formKey,
       VoidCallback? validationform,
       required String textButton,
-      bool? paymentSelected,
+      required bool isOnlinePaymentSelected,
+      required bool isCashPaymentSelected,
       Order? rawOrder}) {
     return Consumer(
       builder: (context, ref, child) {
@@ -81,12 +86,12 @@ class TotalPriceWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                                "Товары ($totalProductCount)_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+                            Text("Товары ($totalProductCount)",
                                 style: const TextStyle(
                                     color: Color.fromRGBO(177, 175, 175, 1),
                                     fontWeight: FontWeight.w500,
                                     fontSize: 14)),
+                            dashedLine(Colors.grey, isHorizontal: true),
                             Text("$totalProductPrice С",
                                 style: const TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500))
@@ -101,12 +106,12 @@ class TotalPriceWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                                "Размер скидки_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
+                            const Text("Размер скидки",
                                 style: TextStyle(
                                     color: Color.fromRGBO(177, 175, 175, 1),
                                     fontWeight: FontWeight.w500,
                                     fontSize: 14)),
+                            dashedLine(Colors.grey, isHorizontal: true),
                             Text("-$totalProductDiscount С",
                                 style: const TextStyle(
                                     color: Colors.red,
@@ -123,15 +128,14 @@ class TotalPriceWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Expanded(
-                              child: Text(
-                                "Доставка _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _",
-                                style: TextStyle(
-                                    color: Color.fromRGBO(177, 175, 175, 1),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14),
-                              ),
+                            Text(
+                              "Доставка",
+                              style: TextStyle(
+                                  color: Color.fromRGBO(177, 175, 175, 1),
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14),
                             ),
+                            dashedLine(Colors.grey, isHorizontal: true),
                             Text(
                               "$deliveryPrice",
                               style: const TextStyle(
@@ -207,13 +211,22 @@ class TotalPriceWidget {
                                                   builder: (context) =>
                                                       const CheckoutPage()));
                                         },
-                                        child: Text(
-                                          textButton,
-                                          style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 16),
-                                        )),
+                                        child: Container(
+                                            width: Utilities
+                                                .setWidgetWidthByPercentage(
+                                                    context, 91),
+                                            height: Utilities
+                                                .setWidgetHeightByPercentage(
+                                                    context, 4.7),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              textButton,
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16),
+                                            )),
+                                      ),
                               )
                             : TextButton(
                                 onPressed: () {
@@ -222,53 +235,52 @@ class TotalPriceWidget {
                                       if (validationform != null) {
                                         validationform();
                                       }
-                                      if (paymentSelected != null) {
-                                        if (paymentSelected) {
-                                          if (rawOrder != null) {
-                                            Order order = Order(
-                                                phoneNumber:
-                                                    rawOrder.phoneNumber,
-                                                totalDiscount:
-                                                    totalProductDiscount,
-                                                id: rawOrder.id,
-                                                deliveryPrice: deliveryPrice,
-                                                orderStatus:
-                                                    rawOrder.orderStatus,
-                                                customerFirstName:
-                                                    rawOrder.customerFirstName,
-                                                customerLastName:
-                                                    rawOrder.customerLastName,
-                                                customerAddress:
-                                                    rawOrder.customerAddress,
-                                                orderedProducts:
-                                                    rawOrder.orderedProducts,
-                                                totalOrderPrice:
-                                                    totalProductDiscountPrice);
-                                                    postOrder(order, ref);
-                                            Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ReceiptPage(
-                                                            ref: ref,
-                                                            order: order)));
-                                          }
-                                          ref
-                                              .read(deliveryPriceProvider
-                                                  .notifier)
-                                              .state = ref
-                                                  .read(userProvider)
-                                                  .region
-                                                  ?.priceDelivery ??
-                                              0.0;
-
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                                content:
-                                                    Text("Успешно изменено")),
-                                          );
+                                      // if (isCashPaymentSelected != null) {
+                                      if (isCashPaymentSelected ||
+                                          isOnlinePaymentSelected) {
+                                        if (rawOrder != null) {
+                                          Order order = Order(
+                                              phoneNumber: rawOrder.phoneNumber,
+                                              totalDiscount:
+                                                  totalProductDiscount,
+                                              id: rawOrder.id,
+                                              deliveryPrice: deliveryPrice,
+                                              orderStatus: rawOrder.orderStatus,
+                                              customerFirstName:
+                                                  rawOrder.customerFirstName,
+                                              customerLastName:
+                                                  rawOrder.customerLastName,
+                                              customerAddress:
+                                                  rawOrder.customerAddress,
+                                              orderedProducts:
+                                                  rawOrder.orderedProducts,
+                                              totalOrderPrice:
+                                                  totalProductDiscountPrice);
+                                          postOrder(order, ref);
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ReceiptPage(
+                                                          ref: ref,
+                                                          order: order)));
                                         }
+                                        ref
+                                            .read(
+                                                deliveryPriceProvider.notifier)
+                                            .state = ref
+                                                .read(userProvider)
+                                                .region
+                                                ?.priceDelivery ??
+                                            0.0;
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content:
+                                                  Text("Успешно изменено")),
+                                        );
                                       }
+                                      // }
                                     }
                                   }
                                 },
