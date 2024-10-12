@@ -400,7 +400,7 @@ class _OrderCardState extends ConsumerState<OrderCard> {
                                 fontSize: 16, fontWeight: FontWeight.w500),
                           ),
                           Text(
-                            "Квартира ${widget.order.customerAddress.unit}, Подъезд ${widget.order.customerAddress.entrance}, Этаж ${widget.order.customerAddress.floor}",
+                            "Квартира ${widget.order.customerAddress.unit != 'string' ? widget.order.customerAddress.unit : ''}, Подъезд ${widget.order.customerAddress.entrance != 'string' ? widget.order.customerAddress.entrance : ''}, Этаж ${widget.order.customerAddress.floor != 'string' ? widget.order.customerAddress.floor : ''}",
                             style: const TextStyle(
                                 fontSize: 11, fontWeight: FontWeight.w500),
                           )

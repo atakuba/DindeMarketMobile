@@ -1,9 +1,5 @@
-import 'dart:convert';
-
 import 'package:dinde_market/models/order.dart';
 import 'package:dinde_market/provider/cart_list_provider.dart';
-import 'package:dinde_market/provider/token_provider.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,21 +11,19 @@ import 'package:dinde_market/pages/opening_pages/district_modal_widget.dart';
 import 'package:dinde_market/provider/district_provider.dart';
 import 'package:dinde_market/provider/user_provider.dart';
 import 'package:dinde_market/utility/utilities.dart';
-import 'package:http/http.dart' as http;
 
 class CheckoutPage extends ConsumerStatefulWidget {
   const CheckoutPage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _CheckoutPageState createState() => _CheckoutPageState();
 }
 
 class _CheckoutPageState extends ConsumerState<CheckoutPage> {
   var selectedDistrict = "Выберите регион";
-  var urlPrefix = "http://dindemarket.eu-north-1.elasticbeanstalk.com";
 
   final _formKey = GlobalKey<FormState>();
+  final ScrollController _scrollController = ScrollController();
 
   var _firstNameController = TextEditingController();
   var _lastNameController = TextEditingController();
@@ -69,9 +63,37 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
         // If no payment method is selected, display an error message
         isValid = false;
         errorMessage = 'Выберите способ оплаты';
+        _scrollToPosition('bottom');
       }
     });
   }
+  
+
+  void _scrollToPosition(String position) {
+  double targetScrollPosition;
+
+  switch (position.toLowerCase()) {
+    case 'top':
+      targetScrollPosition = _scrollController.position.minScrollExtent; // Scroll to the top
+      break;
+    case 'middle':
+      targetScrollPosition = _scrollController.position.maxScrollExtent / 2; // Scroll to the middle
+      break;
+    case 'bottom':
+      targetScrollPosition = _scrollController.position.maxScrollExtent; // Scroll to the bottom
+      break;
+    default:
+      targetScrollPosition = _scrollController.position.minScrollExtent; // Invalid argument, do nothing or handle as needed
+  }
+
+  _scrollController.animateTo(
+    targetScrollPosition,
+    duration: const Duration(seconds: 1),
+    curve: Curves.easeInOut,
+  );
+
+
+}
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +122,7 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                   child: Form(
                     key: _formKey,
                     child: ListView(
+                      controller: _scrollController,
                       children: [
                         Container(
                             margin: const EdgeInsets.symmetric(vertical: 7),
@@ -131,12 +154,17 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   child: TextFormField(
                                     controller: _firstNameController,
                                     validator: (value) {
+                                      // _scrollToPosition('top');
+                                      // _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                                       if (value == null || value.isEmpty) {
+                                      _scrollToPosition('top');
                                         return 'Пожалуйста, введите имя'; // Validation message
                                       } else if (value.length < 2) {
+                                      _scrollToPosition('top');
                                         return 'Имя должно содержать не менее 2 символов';
                                       } else if (!RegExp(r'^[a-zA-Zа-яА-Я\s]+$')
                                           .hasMatch(value)) {
+                                      _scrollToPosition('top');
                                         return 'Имя должно содержать только буквы';
                                       }
                                       return null;
@@ -185,12 +213,17 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                   child: TextFormField(
                                     controller: _lastNameController,
                                     validator: (value) {
+                                      // _scrollToPosition('top');
+                                      // _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                                       if (value == null || value.isEmpty) {
+                                      _scrollToPosition('top');
                                         return 'Пожалуйста, введите фамилию'; // Validation message
                                       } else if (value.length < 2) {
+                                      _scrollToPosition('top');
                                         return 'Фамилия должна содержать не менее 2 символов';
                                       } else if (!RegExp(r'^[a-zA-Zа-яА-Я\s]+$')
                                           .hasMatch(value)) {
+                                      _scrollToPosition('top');
                                         return 'Фамилия должна содержать только буквы';
                                       }
                                       return null;
@@ -241,11 +274,15 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                       PhoneNumberInputFormatter(),
                                     ],
                                     validator: (value) {
+                                      // _scrollToPosition('top');
+                                      // _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                                       if (value == null || value.isEmpty) {
+                                      _scrollToPosition('top');
                                         return 'Пожалуйста, введите номер телефона'; // Please enter a phone number
                                       } else if (!RegExp(
                                               r'^\+996 \(\d{3}\) \d{2} \d{2} \d{2}$')
                                           .hasMatch(value)) {
+                                      _scrollToPosition('top');
                                         return 'Формат номера телефона: +996 (XXX) XX XX XX'; // Phone number must follow the format +996 (XXX) XX XX XX
                                       }
                                       return null;
@@ -354,12 +391,15 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                     controller: _streetController,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
+                                      _scrollToPosition('middle');
                                         return 'Пожалуйста, введите название улицы';
                                       } else if (value.length < 3) {
+                                      _scrollToPosition('middle');
                                         return 'Название улицы должно содержать не менее 3 символов';
                                       } else if (!RegExp(
                                               r'^[a-zA-Zа-яА-Я0-9\s]+$')
                                           .hasMatch(value)) {
+                                      _scrollToPosition('middle');
                                         return 'Название улицы должно содержать только буквы, цифры';
                                       }
                                       return null;
@@ -637,6 +677,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                               isOnlinePaymentSelected = true;
                                               isCashPaymentSelected =
                                                   false; // Deselect the cash payment option
+        errorMessage = '';
+        isValid = true;
                                             });
                                           },
                                         ),
@@ -679,6 +721,8 @@ class _CheckoutPageState extends ConsumerState<CheckoutPage> {
                                               isCashPaymentSelected = true;
                                               isOnlinePaymentSelected =
                                                   false; // Deselect the online payment option
+        errorMessage = '';
+        isValid = true;
                                             });
                                           },
                                         ),

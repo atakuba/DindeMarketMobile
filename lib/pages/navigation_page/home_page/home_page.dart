@@ -309,7 +309,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                       width:
                           Utilities.setWidgetWidthByPercentage(context, 19.7),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      print(ref.read(tokenProvider));
+                    },
                   ),
                   Image(
                     image: const AssetImage("assets/instagram_logo.png"),

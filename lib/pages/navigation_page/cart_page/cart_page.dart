@@ -276,11 +276,11 @@ class _CartPageState extends State<CartPage> {
   }
 }
 
-int totalProductCost(List<Product> products) {
-  int totalCost = 0;
+double totalProductCost(List<Product> products) {
+  double totalCost = 0;
   for (Product p in products) {
     //Needs to be changed to double
-    totalCost += p.price.round();
+    totalCost += p.price;
   }
   return totalCost;
 }
