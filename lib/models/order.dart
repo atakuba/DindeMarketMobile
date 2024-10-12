@@ -89,6 +89,9 @@ class Order {
       if (statusValue == 'PENDING') {
         statusMap[OrderStatus.underReview] = statusTime;
       }
+      if(statusValue == 'PAID') {
+        statusMap[OrderStatus.accepted] = statusTime;
+      }
     }
 
     List<Product> prods = (json['products'] as List).map((productJson) {
