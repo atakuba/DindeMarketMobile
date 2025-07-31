@@ -1,6 +1,6 @@
 # Dinde Market Mobile
 
-![Dinde Market Screenshot](https://i.postimg.cc/3RdhbcDn/dinde-market-screenshot.png)
+![Dinde Market Screenshot]([https://i.postimg.cc/3RdhbcDn/dinde-market-screenshot.png](https://i.postimg.cc/XqXMKKGs/DINDE-MARKET.png))
 
 Dinde Market Mobile is a fully responsive e-commerce application built using Flutter and Dart. The app provides a seamless shopping experience for users on both Android and iOS devices.
 
